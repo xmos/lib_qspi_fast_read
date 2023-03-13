@@ -1,1 +1,1 @@
-include("general_use/fast_flash_test.cmake")
+include(${CMAKE_CURRENT_LIST_DIR}/general_use/fast_flash_test.cmake)
