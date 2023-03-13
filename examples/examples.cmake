@@ -1,0 +1,1 @@
+include("general_use/fast_flash_test.cmake")
