@@ -23,8 +23,7 @@ extern "C" {
 #define PORT_PAD_CTL_SMT    0           // Schmitt off
 #define PORT_PAD_CTL_SR     1           // Fast slew
 #ifndef PORT_PAD_CTL_DR_STR
-#define PORT_PAD_CTL_DR_STR DR_STR_2mA
-// #define PORT_PAD_CTL_DR_STR DR_STR_8mA  // 8mA drive
+#define PORT_PAD_CTL_DR_STR DR_STR_8mA  // 8mA drive
 #endif
 #define PORT_PAD_CTL_REN    1           // Receiver enabled
 #define PORT_PAD_CTL_MODE   0x0006

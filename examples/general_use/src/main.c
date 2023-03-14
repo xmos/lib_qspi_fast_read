@@ -66,6 +66,7 @@ void test(void)
 
     qspi_flash_fast_read_shutdown(ctx);
     qspi_flash_fast_read_setup_resources(ctx);
+    qspi_flash_fast_read_apply_calibration(ctx);
 
     {
         printf("Test 2\n");
@@ -88,6 +89,7 @@ void test(void)
 
     qspi_flash_fast_read_shutdown(ctx);
     qspi_flash_fast_read_setup_resources(ctx);
+    qspi_flash_fast_read_apply_calibration(ctx);
 
     {
         printf("Test 3\n");

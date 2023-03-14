@@ -7,11 +7,6 @@ file(GLOB_RECURSE APP_SOURCES ${CMAKE_CURRENT_LIST_DIR}/src/*.c)
 set(APP_INCLUDES ${CMAKE_CURRENT_LIST_DIR}/src)
 
 #**********************
-# QSPI Flash Layout
-#**********************
-set(BOOT_PARTITION_SIZE 0x100000)
-
-#**********************
 # Flags
 #**********************
 set(APP_COMPILER_FLAGS
@@ -19,7 +14,6 @@ set(APP_COMPILER_FLAGS
     -g
     -report
     -fxscope
-    -mcmodel=large
     -Wno-xcore-fptrgroup
     ${CMAKE_CURRENT_LIST_DIR}/src/config.xscope
     ${CMAKE_CURRENT_LIST_DIR}/src/XK_VOICE_L71.xn
@@ -39,7 +33,7 @@ set(APP_LINK_LIBRARIES
 )
 
 #**********************
-# Tile Targets
+# Targets
 #**********************
 
 set(TARGET_NAME example_fast_flash_test)
@@ -51,13 +45,23 @@ target_compile_options(${TARGET_NAME} PRIVATE ${APP_COMPILER_FLAGS})
 target_link_libraries(${TARGET_NAME} PUBLIC ${APP_LINK_LIBRARIES} lib_qspi_flash_fast_read)
 target_link_options(${TARGET_NAME} PRIVATE ${APP_LINK_OPTIONS})
 
-add_executable(example_xc_fast_flash_test EXCLUDE_FROM_ALL)
-target_sources(example_xc_fast_flash_test PUBLIC ${CMAKE_CURRENT_LIST_DIR}/src/main.xc)
-target_include_directories(example_xc_fast_flash_test PUBLIC ${APP_INCLUDES} ${RTOS_CONF_INCLUDES})
-target_compile_definitions(example_xc_fast_flash_test PUBLIC ${APP_COMPILE_DEFINITIONS})
-target_compile_options(example_xc_fast_flash_test PRIVATE ${APP_COMPILER_FLAGS})
-target_link_libraries(example_xc_fast_flash_test PUBLIC)
-target_link_options(example_xc_fast_flash_test PRIVATE ${APP_LINK_OPTIONS})
+#**********************
+# Helper Targets
+#**********************
+add_custom_target(run_example_fast_flash_test
+    COMMAND xrun --xscope example_fast_flash_test.xe
+    DEPENDS example_fast_flash_test
+    COMMENT
+    "Run application"
+    VERBATIM
+)
+
+add_custom_target(debug_example_fast_flash_test
+    COMMAND xgdb example_fast_flash_test.xe -ex "connect" -ex "connect --xscope" -ex "run"
+    DEPENDS example_fast_flash_test
+    COMMENT
+    "Debug application"
+)
 
 # create_run_target(example_xc_fast_flash_test)
 # create_debug_target(example_xc_fast_flash_test)

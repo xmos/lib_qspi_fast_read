@@ -20,11 +20,18 @@
  * transfer is available in the transfer register is available
  * Data will be overwritten in clock 27+8
  * 
- * Allow to be user overridden for advanced users
- */
+ * Allow to be user overridden for advanced users */
 #define READ_ADJUST_MIN_START_CYCLE     27
 #endif
 
+#ifndef IO_SWITCH_TO_INPUT_CYCLE
+/* At specified value of port timer we read the transfer reg word
+ * and discard, data will be junk. Exact timing of port going
+ * high-z would need simulation but it will be in the cycle specified. */
+#define IO_SWITCH_TO_INPUT_CYCLE    18
+#endif
+
+/* Max supported clock divider */
 #define MAX_CLK_DIVIDE 6
 
 
@@ -84,21 +91,15 @@ void qspi_flash_fast_read_shutdown(
     port_disable(ctx->sio_port);
 }
 
-void qspi_flash_fast_read_apply_best_setting(
-    qspi_fast_flash_read_ctx_t *ctx,
-    uint8_t best_setting)
+void qspi_flash_fast_read_apply_calibration(
+    qspi_fast_flash_read_ctx_t *ctx)
 {
-    int32_t sdelay = (best_setting & 0x01);
-    int32_t pad_delay = (best_setting & 0x38) >> 3;
-    int32_t read_adj  = (best_setting & 0x06) >> 1;
-    ctx->read_start_pt = READ_ADJUST_MIN_START_CYCLE + read_adj;
-    
-    if (sdelay == 1) {
+    if (ctx->sdelay  == 1) {
         port_set_sample_falling_edge(ctx->sio_port);
     } else {
         port_set_sample_rising_edge(ctx->sio_port);
     }
-    QSPI_FF_SETC(ctx->sio_port, QSPI_FF_SETC_PAD_DELAY(pad_delay));
+    QSPI_FF_SETC(ctx->sio_port, QSPI_FF_SETC_PAD_DELAY(ctx->pad_delay));
     // printf("Best settings: read adj %d, sdelay = %d, pad_delay = %d\n", (best_setting & 0x06) >> 1, (best_setting & 0x01), (best_setting & 0x38) >> 3);
 }
 
@@ -165,13 +166,34 @@ int32_t qspi_flash_fast_read_calibrate(
 
     if (pass_count >= 5) {
         uint8_t best_setting = pass_start + (pass_count >> 1); // Pick the middle setting
-        qspi_flash_fast_read_apply_best_setting(ctx, results[best_setting]);
+        
+        uint32_t sdelay = (best_setting & 0x01);
+        uint32_t pad_delay = (best_setting & 0x38) >> 3;
+        uint32_t read_adj  = (best_setting & 0x06) >> 1;
+        ctx->sdelay = sdelay;
+        ctx->pad_delay = pad_delay;
+        ctx->read_start_pt = READ_ADJUST_MIN_START_CYCLE + read_adj;
+        
+        qspi_flash_fast_read_apply_calibration(ctx);
     } else {
         // printf("Failed to find valid settings.  Pass count: %d\n", pass_count);
         retval = -1;
     }
     
     return retval;
+}
+
+void qspi_flash_fast_read_mode_set(
+    qspi_fast_flash_read_ctx_t *ctx,
+    qspi_fast_flash_read_transfer_mode_t mode)
+{
+    ctx->mode = mode;
+}
+	
+qspi_fast_flash_read_transfer_mode_t qspi_flash_fast_read_mode_get(
+    qspi_fast_flash_read_ctx_t *ctx)
+{
+    return ctx->mode;
 }
 
 void qspi_flash_fast_read(
@@ -182,41 +204,45 @@ void qspi_flash_fast_read(
 {
     uint32_t *read_data = (uint32_t *)buf;
 	size_t word_len = len / sizeof(uint32_t);
-
     uint32_t addr_mode_wr;
-    int32_t i=0;
+    int32_t i = 0;
+    uint32_t tmp = 0;
 
-    // Shift the address left by 8 bits to align the MSB of address with MSB of the int. We or in the mode bits.
-    // Buffered ports remember always shift right.
-    // So LSB first
-    // We need to nibble swap the address and mode word as it needs to be output MS nibble first and ports do the opposite
+    /* Save bytes over word size for later */
+    len %= 4;
+
+    /* Shift the address left by 8 bits to align the MSB of address
+     * with MSB of the port width. Buffered ports shift right so 
+     * LSB first. We need to nibble swap the address as it needs
+     * to be output MS nibble first and ports do the opposite */
     addr_mode_wr = qspi_ff_nibble_swap(byterev((addr << 8)));
     
-    // Need to set the first data output bit (MS bit of flash command) before we start the clock.
+    /* Need to set the first data output bit (MS bit of flash command 0xEB)
+     * before we start the clock. */
     port_out_part_word(ctx->sio_port, 0x1, 4);
     clock_start(ctx->clock_block);
     port_sync(ctx->sio_port);
     clock_stop(ctx->clock_block);
     
-    port_out(ctx->cs_port, 0); // Set CS_N low
+    port_out(ctx->cs_port, 0);
     
-    // Pre load the transfer register in the port with data. This will not go out yet because clock has not been started.
-    // This data needs to be shifted as when starting the clock we will clock the first bit of data to flash before this data goes out.
-    // We also need to Or in the first nibble of addr_mode_wr that we want to output.
-    // This is the 7 LSB of the 0xEB instruction on dat[0], dat[3:1] = 0
+    /* Preload the transfer register in the port with the remainder of
+     * the first word. This is the 7 LSB of the 0xEB instruction 
+     * We need to OR in the first nibble of addr_mode_wr. */
     port_out(ctx->sio_port, 0x01101011 | ((addr_mode_wr & 0x0000000F) << 28));
 
-    // Start the clock block running. This starts output of data and resets the port timer to 0 on the clk port.
+    /* Start the clock block running. This starts output of data and
+     * resets the port timer to 0 on the clk port. */
     clock_start(ctx->clock_block);
 
-    port_out_part_word(ctx->sio_port, (addr_mode_wr >> 4), 28); // Immediately follow up with the remaining address and mode bits
+    /* Output the remaining 28 bits of addr_mode_wr */
+    port_out_part_word(ctx->sio_port, (addr_mode_wr >> 4), 28);
     
-    // Now we want to turn the port around at the right point.
-    // At specified value of port timer we read the transfer reg word and discard, data will be junk. Exact timing of port going high-z would need simulation but it will be in the cycle specified.
-    (void) port_in_at_time(ctx->sio_port, 18);
+    /* Switch the port to input, discard junk data */
+    (void) port_in_at_time(ctx->sio_port, IO_SWITCH_TO_INPUT_CYCLE);
     
-    // Now we need to read the transfer register at the correct port time so that the initial data from flash will be in there
-    // All following reads will happen directly after this read with no gaps so do not need to be timed.
+    /* Read the initial data word at the calibrated read_start_pt cycle
+     * After the first word remainder do not need to be timed */
     port_set_trigger_time(ctx->sio_port, ctx->read_start_pt);
     for (i = 0; i < word_len; i++) {
         read_data[i] = port_in(ctx->sio_port);
@@ -225,13 +251,18 @@ void qspi_flash_fast_read(
         }
     }
 
-    // Remainder bytes
-    len %= 4;
+    /* Last read for non word multiple bytes */
     if (len > 0) {
         /* Note: This will shift in a full word but we will drop
          * unwanted bits */
-        uint32_t tmp = port_in(ctx->sio_port);
+        tmp = port_in(ctx->sio_port);
+    }
+    
+    clock_stop(ctx->clock_block);
+    port_out(ctx->cs_port, 1);
 
+    /* Finish the non word multiple transfer */
+    if (len > 0) {
 		if (ctx->mode == qspi_fast_flash_read_transfer_nibble_swap) {
 			tmp = qspi_ff_nibble_swap(tmp);
 		}
@@ -242,10 +273,4 @@ void qspi_flash_fast_read(
 			tmp >>= 8;
 		}
     }
-
-    // Stop the clock
-    clock_stop(ctx->clock_block);
-    
-    // Put chip select back high
-    port_out(ctx->cs_port, 1);
 }
