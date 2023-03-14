@@ -33,7 +33,7 @@ void test(void)
         XS1_PORT_1B,
         XS1_PORT_1C,
         XS1_PORT_4B,
-        qspi_fast_flash_read_transfer_nibble_swap,
+        qspi_fast_flash_read_transfer_raw,
         CLK_DIVIDE
     );
     qspi_flash_fast_read_setup_resources(ctx);
