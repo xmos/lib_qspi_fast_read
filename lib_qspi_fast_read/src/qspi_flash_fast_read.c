@@ -79,7 +79,7 @@ void qspi_flash_fast_read_init(
     ctx->mode = mode;
     ctx->divide = divide;
 
-    xassert(divide >= 3); /* Clock divider must be greater than 2 */
+    xassert((divide >= 3) && (divide <= MAX_CLK_DIVIDE));
 }
 
 void qspi_flash_fast_read_shutdown(
@@ -100,7 +100,7 @@ void qspi_flash_fast_read_apply_calibration(
         port_set_sample_rising_edge(ctx->sio_port);
     }
     QSPI_FF_SETC(ctx->sio_port, QSPI_FF_SETC_PAD_DELAY(ctx->pad_delay));
-    // printf("Best settings: read adj %d, sdelay = %d, pad_delay = %d\n", (best_setting & 0x06) >> 1, (best_setting & 0x01), (best_setting & 0x38) >> 3);
+    // printf("Best settings: read adj %lu, sdelay = %lu, pad_delay = %lu\n", ctx->read_start_pt, ctx->sdelay, ctx->pad_delay);
 }
 
 int32_t qspi_flash_fast_read_calibrate(
@@ -205,7 +205,6 @@ void qspi_flash_fast_read(
     uint32_t *read_data = (uint32_t *)buf;
 	size_t word_len = len / sizeof(uint32_t);
     uint32_t addr_mode_wr;
-    int32_t i = 0;
     uint32_t tmp = 0;
 
     /* Save bytes over word size for later */
@@ -244,11 +243,9 @@ void qspi_flash_fast_read(
     /* Read the initial data word at the calibrated read_start_pt cycle
      * After the first word remainder do not need to be timed */
     port_set_trigger_time(ctx->sio_port, ctx->read_start_pt);
-    for (i = 0; i < word_len; i++) {
+
+    for (int i = 0; i < word_len; i++) {
         read_data[i] = port_in(ctx->sio_port);
-        if (ctx->mode == qspi_fast_flash_read_transfer_nibble_swap) {
-            read_data[i] = qspi_ff_nibble_swap(read_data[i]);
-        }
     }
 
     /* Last read for non word multiple bytes */
@@ -261,14 +258,22 @@ void qspi_flash_fast_read(
     clock_stop(ctx->clock_block);
     port_out(ctx->cs_port, 1);
 
+    /* At 133 MHz there is not enough time in the inner loop to
+     * swap so we must do this post IO despite the cost */
+    if (ctx->mode == qspi_fast_flash_read_transfer_nibble_swap) {
+        for (int i = 0; i < word_len; i++) {
+            read_data[i] = qspi_ff_nibble_swap(read_data[i]);
+        }
+    }
+
     /* Finish the non word multiple transfer */
-    if (len > 0) {
+    if (len > 0) {  
 		if (ctx->mode == qspi_fast_flash_read_transfer_nibble_swap) {
 			tmp = qspi_ff_nibble_swap(tmp);
 		}
 
-        buf = (uint8_t *) &read_data[i];
-		for (i = 0; i < len; i++) {
+        buf = (uint8_t *) &read_data[word_len];
+		for (int i = 0; i < len; i++) {
 			*buf++ = (uint8_t)(tmp & 0xFF);
 			tmp >>= 8;
 		}

@@ -23,7 +23,7 @@ extern "C" {
  */
 
 /**
- * Transfer modes for fast read operations
+ * Transfer modes for fast read operations.
  */
 typedef enum {
 	qspi_fast_flash_read_transfer_raw = 0, /**< Do not nibble swap port ins */
@@ -31,7 +31,7 @@ typedef enum {
 } qspi_fast_flash_read_transfer_mode_t;
 
 /**
- * Type representing a qspi_flash_fast_read context
+ * Type representing a qspi_flash_fast_read context.
  */
 typedef struct qspi_flash_fast_read_struct qspi_fast_flash_read_ctx_t;
 
@@ -67,12 +67,12 @@ struct qspi_flash_fast_read_struct {
     qspi_fast_flash_read_transfer_mode_t mode;
 
 	/**
-	 * The divider to use to generate SCLK
+	 * The divider to use to generate SCLK.
 	 */
     uint8_t divide;
 
 	/* 
-	 * The following are used internally and should not modified directly
+	 * The following are used internally and should not modified directly.
 	 */
 	uint32_t read_start_pt;
 	uint32_t sdelay;
@@ -126,9 +126,20 @@ void qspi_flash_fast_read_setup_resources(
  * Calibrate port delays and timings for a qspi_flash_fast_read device.
  * 
  * This must be called after qspi_flash_fast_read_init() and 
- * qspi_flash_fast_read_setup_resources()
+ * qspi_flash_fast_read_setup_resources().
  * 
- * \param ctx A pointer to the qspi_flash_fast_read context to use.
+ * On success qspi_flash_fast_read_apply_calibration() is called implicitly.
+ * 
+ * \param ctx         A pointer to the qspi_flash_fast_read context to use.
+ * \param addr        The address of the calibration pattern.
+ * \param expect_buf  A pointer to the byte array with the expected
+ *                    calibration pattern.
+ * \param scratch_buf A pointer to an application provided scratch buffer.
+ *                    This buffer must be at least len_words words.
+ *                    Contents will be overwritten. After this function
+ *                    call the buffer is owned by the application and no
+ *                    longer needed.
+ * \param len_words   The length in words of the calibration pattern
  * 
  * \returns    0 on success
  *            -1 on failure
@@ -143,9 +154,6 @@ int32_t qspi_flash_fast_read_calibrate(
 /**
  * Apply calibration for a qspi_flash_fast_read device.
  * 
- * This must be called after qspi_flash_fast_read_calibrate()
- * returns success.
- * 
  * \param ctx A pointer to the qspi_flash_fast_read context to use.
  */
 void qspi_flash_fast_read_apply_calibration(
@@ -155,10 +163,10 @@ void qspi_flash_fast_read_apply_calibration(
  * Perform a flash read with a qspi_flash_fast_read device.
  *
  * \param ctx  A pointer to the qspi_flash_fast_read context to use.
- * \param addr The address to read
+ * \param addr The address to read.
  * \param buf  A pointer to the byte array to save the received data.
- *             This must begin on a 4-byte boundary
- * \param len  The number of bytes to input
+ *             This must begin on a 4-byte boundary.
+ * \param len  The number of bytes to input.
  */
 void qspi_flash_fast_read(
     qspi_fast_flash_read_ctx_t *ctx,
@@ -181,7 +189,7 @@ void qspi_flash_fast_read_mode_set(
  * 
  * \param ctx  A pointer to the qspi_flash_fast_read context to use.
  * 
- * \returns   The current configured transfer mode
+ * \returns   The current configured transfer mode.
  */
 qspi_fast_flash_read_transfer_mode_t qspi_flash_fast_read_mode_get(
     qspi_fast_flash_read_ctx_t *ctx);
@@ -199,12 +207,14 @@ void qspi_flash_fast_read_shutdown(
     qspi_fast_flash_read_ctx_t *ctx);
 
 /**
- * Size in words of the default calibration pattern
+ * Size in words of the default calibration pattern.
  */
 #define QFFR_DEFAULT_CAL_PATTERN_BUF_SIZE_WORDS     8
 
 /**
- * Declaration of array which holds the default calibration pattern
+ * Declaration of array which holds the default calibration pattern.
+ * 
+ * This pattern was selected to maximize potential EMI and crosstalk.
  */
 extern uint32_t qspi_flash_fast_read_pattern_expect_default[QFFR_DEFAULT_CAL_PATTERN_BUF_SIZE_WORDS];
  
