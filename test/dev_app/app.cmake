@@ -13,9 +13,7 @@ set(APP_COMPILER_FLAGS
     -Os
     -g
     -report
-    -fxscope
     -Wno-xcore-fptrgroup
-    ${CMAKE_CURRENT_LIST_DIR}/src/config.xscope
     ${CMAKE_CURRENT_LIST_DIR}/src/XK_VOICE_L71.xn
 )
 
@@ -24,7 +22,6 @@ set(APP_COMPILE_DEFINITIONS
 
 set(APP_LINK_OPTIONS
     -report
-    ${CMAKE_CURRENT_LIST_DIR}/src/config.xscope
     ${CMAKE_CURRENT_LIST_DIR}/src/XK_VOICE_L71.xn
 )
 
@@ -67,4 +64,13 @@ add_custom_target(flash_calibration_dev_fast_flash_app
     COMMAND xflash --write-all ${LIB_QSPI_FAST_READ_ROOT_PATH}/lib_qspi_fast_read/calibration_pattern.bin --target-file=${DEV_APP_SRC_ROOT}/src/XK_VOICE_L71.xn
     COMMENT
     "Flash calibration binary"
+)
+
+add_custom_target(xsim_dev_fast_flash_app
+    COMMAND ${CMAKE_COMMAND} -E copy ${LIB_QSPI_FAST_READ_ROOT_PATH}/lib_qspi_fast_read/calibration_pattern.bin ./
+    COMMAND ${CMAKE_COMMAND} -E copy ${LIB_QSPI_FAST_READ_ROOT_PATH}/test/dev_app/qspi.xml ./
+    COMMAND xsim dev_fast_flash_app.xe --plugin QSPI.dll "-xml qspi.xml -core tile[0] XS1_PORT_1B XS1_PORT_1C XS1_PORT_4B"  --vcd-tracing "-o trace.vcd -tile tile[0] -cycles -ports-detailed -clock-blocks -cores -instructions"
+    DEPENDS dev_fast_flash_app
+    COMMENT
+    "Run in xsim"
 )

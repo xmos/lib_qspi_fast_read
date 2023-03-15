@@ -14,16 +14,10 @@
 DECLARE_JOB(test, (void));
 DECLARE_JOB(dummy, (void));
 
-xclock_t clk_spi = XS1_CLKBLK_1;
-port_t p_spi_clk = XS1_PORT_1C;
-port_t p_spi_csn = XS1_PORT_1B;
-port_t p_spi_dat = XS1_PORT_4B;
-
 #define CLK_DIVIDE 6
 
 qspi_fast_flash_read_ctx_t qspi_fast_flash_read_ctx;
 qspi_fast_flash_read_ctx_t *ctx = &qspi_fast_flash_read_ctx;
-
 
 void test(void)
 {
