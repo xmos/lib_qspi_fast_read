@@ -34,7 +34,37 @@ On Windows run:
 
     nmake flash_calibration_example_ff_thruput_eval
 
-Once flashed, the application can be run.
+The Winbond W25Q64JW flash part requires a drive strength increase to maximize data valid duration at high frequency SCLKs. This only needs to be done once as it will write to the nonvolatile config.
+
+On Linux and Mac run:
+
+    make flash_config_drive_str_50_example_ff_thruput_eval
+
+On Windows run:
+
+    nmake flash_config_drive_str_50_example_ff_thruput_eval
+
+To revert back to factory defaults on the IQ package of 25% drive strengh, use the following.
+
+On Linux and Mac run:
+
+    make flash_config_drive_str_25_example_ff_thruput_eval
+
+On Windows run:
+
+    nmake flash_config_drive_str_25_example_ff_thruput_eval
+
+To check the value of status register 3 in the W25Q64JW, use the following.
+
+On Linux and Mac run:
+
+    make flash_config_read_drive_str_example_ff_thruput_eval
+
+On Windows run:
+
+    nmake flash_config_read_drive_str_example_ff_thruput_eval
+
+Once flashed and configured, the application can be run.
 
 On Linux and Mac run:
 

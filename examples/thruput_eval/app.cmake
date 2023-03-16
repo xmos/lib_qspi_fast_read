@@ -52,7 +52,7 @@ add_custom_target(run_example_ff_thruput_eval
     COMMAND xrun --xscope example_ff_thruput_eval.xe
     DEPENDS example_ff_thruput_eval
     COMMENT
-    "Run application"
+        "Run application"
     VERBATIM
 )
 
@@ -60,11 +60,31 @@ add_custom_target(debug_example_ff_thruput_eval
     COMMAND xgdb example_ff_thruput_eval.xe -ex "connect" -ex "connect --xscope" -ex "run"
     DEPENDS example_ff_thruput_eval
     COMMENT
-    "Debug application"
+        "Debug application"
 )
 
 add_custom_target(flash_calibration_example_ff_thruput_eval
     COMMAND xflash --write-all ${LIB_QSPI_FAST_READ_ROOT_PATH}/lib_qspi_fast_read/calibration_pattern.bin --target-file=${THRUPUT_EVAL_SRC_ROOT}/src/XK_VOICE_L71.xn
     COMMENT
-    "Flash calibration binary"
+        "Flash calibration binary"
+)
+
+add_custom_target(flash_config_drive_str_50_example_ff_thruput_eval
+    COMMAND xflash --spi-command 0x06 --target-file=${THRUPUT_EVAL_SRC_ROOT}/src/XK_VOICE_L71.xn
+    COMMAND xflash --spi-command 0x11 0 0x40 --target-file=${THRUPUT_EVAL_SRC_ROOT}/src/XK_VOICE_L71.xn
+    COMMENT
+        "Set W25Q64JW Status Register 3, drive strength to 50%"
+)
+
+add_custom_target(flash_config_drive_str_25_example_ff_thruput_eval
+    COMMAND xflash --spi-command 0x06 --target-file=${THRUPUT_EVAL_SRC_ROOT}/src/XK_VOICE_L71.xn
+    COMMAND xflash --spi-command 0x11 0 0x60 --target-file=${THRUPUT_EVAL_SRC_ROOT}/src/XK_VOICE_L71.xn
+    COMMENT
+        "Set W25Q64JW Status Register 3, drive strength to 25%"
+)
+
+add_custom_target(flash_config_read_drive_str_example_ff_thruput_eval
+    COMMAND xflash --spi-command 0x15 1 --target-file=${THRUPUT_EVAL_SRC_ROOT}/src/XK_VOICE_L71.xn
+    COMMENT
+        "Read W25Q64JW Status Register 3"
 )
