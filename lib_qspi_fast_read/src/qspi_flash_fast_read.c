@@ -79,6 +79,7 @@ void qspi_flash_fast_read_init(
     ctx->mode = mode;
     ctx->divide = divide;
 
+    xassert((mode == qspi_fast_flash_read_transfer_raw) || (mode == qspi_fast_flash_read_transfer_nibble_swap));
     xassert((divide >= 3) && (divide <= MAX_CLK_DIVIDE));
 }
 
@@ -145,7 +146,7 @@ int32_t qspi_flash_fast_read_calibrate(
                 passing_words = 0;
                 for (int32_t m = 0; m < len_words; m++)
                 {
-                    // printf("0x%08x\n", scratch_buf[m]);
+                    // printf("got 0x%08x, expect 0x%08x\n", scratch_buf[m], expect_buf[m]);
                     if (scratch_buf[m] == expect_buf[m]) {
                         passing_words++;
                     }
@@ -153,11 +154,13 @@ int32_t qspi_flash_fast_read_calibrate(
 
                 // Store the settings
                 if (passing_words == len_words) {
+                    // printf("%d sdelay: %d pad_delay: %d read_adj: %d\n", time_index, sdelay, pad_delay, read_adj);
                     results[time_index] = sdelay | (read_adj << 1) | (pad_delay << 3);
                     pass_count++;
                     if (pass_start == -1) {
                         pass_start = time_index;
                     }
+                    // printf("passed %d start %d cnt %d\n", time_index, pass_start, pass_count);
                 }
                 time_index++;
             }
@@ -166,10 +169,10 @@ int32_t qspi_flash_fast_read_calibrate(
 
     if (pass_count >= 5) {
         uint8_t best_setting = pass_start + (pass_count >> 1); // Pick the middle setting
-        
-        uint32_t sdelay = (best_setting & 0x01);
-        uint32_t pad_delay = (best_setting & 0x38) >> 3;
-        uint32_t read_adj  = (best_setting & 0x06) >> 1;
+
+        uint32_t sdelay = (results[best_setting] & 0x01);
+        uint32_t pad_delay = (results[best_setting] & 0x38) >> 3;
+        uint32_t read_adj  = (results[best_setting] & 0x06) >> 1;
         ctx->sdelay = sdelay;
         ctx->pad_delay = pad_delay;
         ctx->read_start_pt = READ_ADJUST_MIN_START_CYCLE + read_adj;
@@ -187,7 +190,10 @@ void qspi_flash_fast_read_mode_set(
     qspi_fast_flash_read_ctx_t *ctx,
     qspi_fast_flash_read_transfer_mode_t mode)
 {
-    ctx->mode = mode;
+    if ((mode == qspi_fast_flash_read_transfer_raw)
+     || (mode == qspi_fast_flash_read_transfer_nibble_swap)) {   
+        ctx->mode = mode;
+    }
 }
 	
 qspi_fast_flash_read_transfer_mode_t qspi_flash_fast_read_mode_get(
