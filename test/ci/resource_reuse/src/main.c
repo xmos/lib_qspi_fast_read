@@ -17,14 +17,7 @@ int main(int argc, const char* argv[])
     UnityGetCommandLineOptions(argc, argv);
     UnityBegin(argv[0]);
 
-    RUN_TEST_GROUP(qspi_flash_fast_read_init);
-    RUN_TEST_GROUP(qspi_flash_fast_read_shutdown);
-    RUN_TEST_GROUP(qspi_flash_fast_read_mode_set);
-    RUN_TEST_GROUP(qspi_flash_fast_read_mode_get);
-    RUN_TEST_GROUP(qspi_flash_fast_read_setup_resources);
-    RUN_TEST_GROUP(qspi_flash_fast_read_calibrate);
-    RUN_TEST_GROUP(qspi_flash_fast_read_apply_calibration);
-    RUN_TEST_GROUP(qspi_flash_fast_read);
+    RUN_TEST_GROUP(qspi_flash_fast_read_resource_reuse);
 
     UnityEnd();
 
