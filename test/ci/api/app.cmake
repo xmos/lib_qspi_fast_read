@@ -58,7 +58,7 @@ add_custom_target(run_test_general
 )
 
 add_custom_target(flash_calibration_test_general
-    COMMAND xflash --write-all ${LIB_QSPI_FAST_READ_ROOT_PATH}/lib_qspi_fast_read/calibration_pattern.bin --target-file=${TEST_GENERAL_SRC_ROOT}/src/XK_VOICE_L71.xn
+    COMMAND xflash --write-all ${TEST_GENERAL_SRC_ROOT}/src/combined_pattern.bin --target-file=${TEST_GENERAL_SRC_ROOT}/src/XK_VOICE_L71.xn
     COMMENT
     "Flash calibration binary"
 )

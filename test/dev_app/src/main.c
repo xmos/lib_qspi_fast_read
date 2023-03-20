@@ -48,12 +48,8 @@ void test(void)
         qspi_flash_fast_read(ctx, 0x100000, read_data, 10240);
         uint32_t end = get_reference_time();
         printf("duration: %d bytes: %d start: %d end: %d\n", end-start, 10240*4, start, end);
-        // unsigned read_data2[10240];
-        // for(int i=0; i<10240; i++) {
-        //     read_data2[i] = (read_data[i]);
-        // }
-
-        // char *ptr = &read_data2;
+        
+        // char *ptr = &read_data;
         // for(int i=0; i<1024; i++) {
         //     printf("%02x ", (char)*(ptr+i));
         // }
@@ -71,16 +67,12 @@ void test(void)
         qspi_flash_fast_read(ctx, 0x100000, read_data, 10);
         uint32_t end = get_reference_time();
         printf("duration: %d bytes: %d start: %d end: %d\n", end-start, 10, start, end);
-        // unsigned read_data2[10];
-        // for(int i=0; i<10; i++) {
-        //     read_data2[i] = (read_data[i]);
-        // }
 
-        // char *ptr = &read_data2;
-        // for(int i=0; i<10; i++) {
-        //     printf("%02x ", (char)*(ptr+i));
-        // }
-        // printf("\n");
+        char *ptr = &read_data;
+        for(int i=0; i<10; i++) {
+            printf("%02x ", (char)*(ptr+i));
+        }
+        printf("\n");
     }
 
     qspi_flash_fast_read_shutdown(ctx);
@@ -94,16 +86,12 @@ void test(void)
         qspi_flash_fast_read(ctx, 0x100000, read_data, 1);
         uint32_t end = get_reference_time();
         printf("duration: %d bytes: %d start: %d end: %d\n", end-start, 1, start, end);
-        // unsigned read_data2[1];
-        // for(int i=0; i<1; i++) {
-        //     read_data2[i] = (read_data[i]);
-        // }
 
-        // char *ptr = &read_data2;
-        // for(int i=0; i<1; i++) {
-        //     printf("%02x ", (char)*(ptr+i));
-        // }
-        // printf("\n");
+        char *ptr = &read_data;
+        for(int i=0; i<1; i++) {
+            printf("%02x ", (char)*(ptr+i));
+        }
+        printf("\n");
     }
 
     {
@@ -113,16 +101,12 @@ void test(void)
         qspi_flash_fast_read(ctx, 0x100001, read_data, 8);
         uint32_t end = get_reference_time();
         printf("duration: %d bytes: %d start: %d end: %d\n", end-start, 8, start, end);
-        // unsigned read_data2[1];
-        // for(int i=0; i<8; i++) {
-        //     read_data2[i] = (read_data[i]);
-        // }
 
-        // char *ptr = &read_data2;
-        // for(int i=0; i<8; i++) {
-        //     printf("%02x ", (char)*(ptr+i));
-        // }
-        // printf("\n");
+        char *ptr = &read_data;
+        for(int i=0; i<8; i++) {
+            printf("%02x ", (char)*(ptr+i));
+        }
+        printf("\n");
     }
 
     _Exit(0);
