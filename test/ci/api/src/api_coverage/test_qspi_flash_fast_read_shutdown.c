@@ -8,12 +8,18 @@
 
 #include "qspi_flash_fast_read.h"
 #include "unity.h"
-#include "api_coverage/api_coverage.h"
+#include "unity_fixture.h"
 
 extern qspi_fast_flash_read_ctx_t qspi_fast_flash_read_ctx;
 extern qspi_fast_flash_read_ctx_t *ctx;
 
-static void test_qspi_flash_fast_read_shutdown_check(void)
+TEST_GROUP(qspi_flash_fast_read_shutdown);
+
+TEST_SETUP(qspi_flash_fast_read_shutdown) {}
+
+TEST_TEAR_DOWN(qspi_flash_fast_read_shutdown) {}
+
+TEST(qspi_flash_fast_read_shutdown, test_qspi_flash_fast_read_shutdown_check)
 {
     qspi_flash_fast_read_init(ctx,
         XS1_CLKBLK_1,
@@ -29,8 +35,6 @@ static void test_qspi_flash_fast_read_shutdown_check(void)
     /* For now just call function to check for gross errors */
 }
 
-void test_qspi_flash_fast_read_shutdown(void)
-{
-    /* Test that appropriate XCORE resources are setup */
-    RUN_TEST(test_qspi_flash_fast_read_shutdown_check);
+TEST_GROUP_RUNNER(qspi_flash_fast_read_shutdown) {
+    RUN_TEST_CASE(qspi_flash_fast_read_shutdown, test_qspi_flash_fast_read_shutdown_check);
 }

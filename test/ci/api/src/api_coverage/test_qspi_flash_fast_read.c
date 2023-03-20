@@ -8,12 +8,18 @@
 
 #include "qspi_flash_fast_read.h"
 #include "unity.h"
-#include "api_coverage/api_coverage.h"
+#include "unity_fixture.h"
 
 extern qspi_fast_flash_read_ctx_t qspi_fast_flash_read_ctx;
 extern qspi_fast_flash_read_ctx_t *ctx;
 
-static void test_qspi_flash_fast_read_cal_pattern(void)
+TEST_GROUP(qspi_flash_fast_read);
+
+TEST_SETUP(qspi_flash_fast_read) {}
+
+TEST_TEAR_DOWN(qspi_flash_fast_read) {}
+
+TEST(qspi_flash_fast_read, test_qspi_flash_fast_read_cal_pattern)
 {
     qspi_flash_fast_read_init(ctx,
         XS1_CLKBLK_1,
@@ -38,7 +44,6 @@ static void test_qspi_flash_fast_read_cal_pattern(void)
     TEST_ASSERT_EQUAL_UINT32_ARRAY(qspi_flash_fast_read_pattern_expect_default, buf, QFFR_DEFAULT_CAL_PATTERN_BUF_SIZE_WORDS);
 }
 
-void test_qspi_flash_fast_read(void)
-{
-    RUN_TEST(test_qspi_flash_fast_read_cal_pattern);
+TEST_GROUP_RUNNER(qspi_flash_fast_read) {
+    RUN_TEST_CASE(qspi_flash_fast_read, test_qspi_flash_fast_read_cal_pattern);
 }

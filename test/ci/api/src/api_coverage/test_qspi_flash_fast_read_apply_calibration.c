@@ -8,12 +8,18 @@
 
 #include "qspi_flash_fast_read.h"
 #include "unity.h"
-#include "api_coverage/api_coverage.h"
+#include "unity_fixture.h"
 
 extern qspi_fast_flash_read_ctx_t qspi_fast_flash_read_ctx;
 extern qspi_fast_flash_read_ctx_t *ctx;
 
-void test_qspi_flash_fast_read_calibrate_check(void)
+TEST_GROUP(qspi_flash_fast_read_apply_calibration);
+
+TEST_SETUP(qspi_flash_fast_read_apply_calibration) {}
+
+TEST_TEAR_DOWN(qspi_flash_fast_read_apply_calibration) {}
+
+TEST(qspi_flash_fast_read_apply_calibration, test_qspi_flash_fast_read_calibrate_check)
 {
     // Setup the clock block and ports
     qspi_flash_fast_read_init(ctx,
@@ -35,8 +41,6 @@ void test_qspi_flash_fast_read_calibrate_check(void)
     /* For now just call function to check for gross errors */
 }
 
-
-void test_qspi_flash_fast_read_apply_calibration(void)
-{
-    RUN_TEST(test_qspi_flash_fast_read_calibrate_check);
+TEST_GROUP_RUNNER(qspi_flash_fast_read_apply_calibration) {
+    RUN_TEST_CASE(qspi_flash_fast_read_apply_calibration, test_qspi_flash_fast_read_calibrate_check);
 }

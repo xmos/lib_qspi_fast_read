@@ -14,6 +14,7 @@ set(APP_COMPILER_FLAGS
     -g
     -report
     -Wno-xcore-fptrgroup
+    -fcmdline-buffer-bytes=1024
     ${CMAKE_CURRENT_LIST_DIR}/src/XK_VOICE_L71.xn
 )
 
@@ -23,6 +24,7 @@ set(APP_COMPILE_DEFINITIONS
 
 set(APP_LINK_OPTIONS
     -report
+    -fcmdline-buffer-bytes=1024
     ${CMAKE_CURRENT_LIST_DIR}/src/XK_VOICE_L71.xn
 )
 
@@ -48,7 +50,7 @@ target_link_options(${TARGET_NAME} PRIVATE ${APP_LINK_OPTIONS})
 # Helper Targets
 #**********************
 add_custom_target(run_test_general
-    COMMAND xrun --io test_general.xe
+    COMMAND xrun --io --args test_general.xe -v
     DEPENDS test_general
     COMMENT
     "Run application"
@@ -59,4 +61,12 @@ add_custom_target(flash_calibration_test_general
     COMMAND xflash --write-all ${LIB_QSPI_FAST_READ_ROOT_PATH}/lib_qspi_fast_read/calibration_pattern.bin --target-file=${TEST_GENERAL_SRC_ROOT}/src/XK_VOICE_L71.xn
     COMMENT
     "Flash calibration binary"
+)
+
+add_custom_target(run_test_general_help
+    COMMAND xrun --io --args test_general.xe -h
+    DEPENDS test_general
+    COMMENT
+    "Run application"
+    VERBATIM
 )

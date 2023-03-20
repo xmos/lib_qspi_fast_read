@@ -3,6 +3,7 @@
 
 /* System headers */
 #include <platform.h>
+#include <stdio.h>
 #include <xs1.h>
 #include <xcore/clock.h>
 #include <xcore/port.h>
@@ -12,31 +13,26 @@
 
 #include "qspi_flash_fast_read.h"
 #include "unity.h"
-
-#include "api_coverage/api_coverage.h"
+#include "unity_fixture.h"
 
 qspi_fast_flash_read_ctx_t qspi_fast_flash_read_ctx;
 qspi_fast_flash_read_ctx_t *ctx = &qspi_fast_flash_read_ctx;
 
-void setUp(void) {
-    ;
-}
-
-void tearDown(void) {
-    ;
-}
-
-int main(void)
+int main(int argc, const char* argv[])
 {
-    UNITY_BEGIN();
-    test_qspi_flash_fast_read_init();
-    test_qspi_flash_fast_read_shutdown();
-    test_qspi_flash_fast_read_mode_set();
-    test_qspi_flash_fast_read_mode_get();
-    test_qspi_flash_fast_read_setup_resources();
-    test_qspi_flash_fast_read_calibrate();
-    test_qspi_flash_fast_read_apply_calibration();
-    test_qspi_flash_fast_read();
+    UnityGetCommandLineOptions(argc, argv);
+    UnityBegin(argv[0]);
 
-    return UNITY_END();
+    RUN_TEST_GROUP(qspi_flash_fast_read_init);
+    RUN_TEST_GROUP(qspi_flash_fast_read_shutdown);
+    RUN_TEST_GROUP(qspi_flash_fast_read_mode_set);
+    RUN_TEST_GROUP(qspi_flash_fast_read_mode_get);
+    RUN_TEST_GROUP(qspi_flash_fast_read_setup_resources);
+    RUN_TEST_GROUP(qspi_flash_fast_read_calibrate);
+    RUN_TEST_GROUP(qspi_flash_fast_read_apply_calibration);
+    RUN_TEST_GROUP(qspi_flash_fast_read);
+
+    UnityEnd();
+
+    return (int)Unity.TestFailures;
 }

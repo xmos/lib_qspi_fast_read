@@ -8,12 +8,18 @@
 
 #include "qspi_flash_fast_read.h"
 #include "unity.h"
-#include "api_coverage/api_coverage.h"
+#include "unity_fixture.h"
 
 extern qspi_fast_flash_read_ctx_t qspi_fast_flash_read_ctx;
 extern qspi_fast_flash_read_ctx_t *ctx;
 
-void test_qspi_flash_fast_read_calibrate_pass(void)
+TEST_GROUP(qspi_flash_fast_read_calibrate);
+
+TEST_SETUP(qspi_flash_fast_read_calibrate) {}
+
+TEST_TEAR_DOWN(qspi_flash_fast_read_calibrate) {}
+
+TEST(qspi_flash_fast_read_calibrate, test_qspi_flash_fast_read_calibrate_pass)
 {
     // Setup the clock block and ports
     qspi_flash_fast_read_init(ctx,
@@ -32,7 +38,7 @@ void test_qspi_flash_fast_read_calibrate_pass(void)
     TEST_ASSERT_EQUAL_INT32(0, qspi_flash_fast_read_calibrate(ctx, addr, qspi_flash_fast_read_pattern_expect_default, scratch_buf, QFFR_DEFAULT_CAL_PATTERN_BUF_SIZE_WORDS));
 }
 
-static void test_qspi_flash_fast_read_calibrate_fail(void)
+TEST(qspi_flash_fast_read_calibrate, test_qspi_flash_fast_read_calibrate_fail)
 {
     /* Configure to nibble swap to result in calibration failure */
     qspi_flash_fast_read_init(ctx,
@@ -51,7 +57,7 @@ static void test_qspi_flash_fast_read_calibrate_fail(void)
     TEST_ASSERT_NOT_EQUAL_INT32(0, qspi_flash_fast_read_calibrate(ctx, addr, qspi_flash_fast_read_pattern_expect_default, scratch_buf, QFFR_DEFAULT_CAL_PATTERN_BUF_SIZE_WORDS));
 }
 
-static void test_qspi_flash_fast_read_calibrate_invalid_expect_buf(void)
+TEST(qspi_flash_fast_read_calibrate, test_qspi_flash_fast_read_calibrate_invalid_expect_buf)
 {
     /* Configure to nibble swap to result in calibration failure */
     qspi_flash_fast_read_init(ctx,
@@ -70,7 +76,7 @@ static void test_qspi_flash_fast_read_calibrate_invalid_expect_buf(void)
     TEST_ASSERT_NOT_EQUAL_INT32(0, qspi_flash_fast_read_calibrate(ctx, addr, NULL, scratch_buf, QFFR_DEFAULT_CAL_PATTERN_BUF_SIZE_WORDS));
 }
 
-static void test_qspi_flash_fast_read_calibrate_invalid_scratch_buf(void)
+TEST(qspi_flash_fast_read_calibrate, test_qspi_flash_fast_read_calibrate_invalid_scratch_buf)
 {
     /* Configure to nibble swap to result in calibration failure */
     qspi_flash_fast_read_init(ctx,
@@ -88,12 +94,11 @@ static void test_qspi_flash_fast_read_calibrate_invalid_scratch_buf(void)
     TEST_ASSERT_NOT_EQUAL_INT32(0, qspi_flash_fast_read_calibrate(ctx, addr, qspi_flash_fast_read_pattern_expect_default, NULL, QFFR_DEFAULT_CAL_PATTERN_BUF_SIZE_WORDS));
 }
 
-void test_qspi_flash_fast_read_calibrate(void)
-{
-    /* Test calibration
-     * Note this test assume raw calibration pattern was flashed */
-    RUN_TEST(test_qspi_flash_fast_read_calibrate_pass);
-    RUN_TEST(test_qspi_flash_fast_read_calibrate_fail);
-    RUN_TEST(test_qspi_flash_fast_read_calibrate_invalid_expect_buf);
-    RUN_TEST(test_qspi_flash_fast_read_calibrate_invalid_scratch_buf);
+/* Note this test assume raw calibration pattern was flashed */
+TEST_GROUP_RUNNER(qspi_flash_fast_read_calibrate) {
+    RUN_TEST_CASE(qspi_flash_fast_read_calibrate, test_qspi_flash_fast_read_calibrate_pass);
+    RUN_TEST_CASE(qspi_flash_fast_read_calibrate, test_qspi_flash_fast_read_calibrate_fail);
+    RUN_TEST_CASE(qspi_flash_fast_read_calibrate, test_qspi_flash_fast_read_calibrate_invalid_expect_buf);
+    RUN_TEST_CASE(qspi_flash_fast_read_calibrate, test_qspi_flash_fast_read_calibrate_invalid_scratch_buf);
+
 }

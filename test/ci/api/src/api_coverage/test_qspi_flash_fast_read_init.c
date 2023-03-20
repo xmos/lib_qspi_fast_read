@@ -8,12 +8,18 @@
 
 #include "qspi_flash_fast_read.h"
 #include "unity.h"
-#include "api_coverage/api_coverage.h"
+#include "unity_fixture.h"
 
 extern qspi_fast_flash_read_ctx_t qspi_fast_flash_read_ctx;
 extern qspi_fast_flash_read_ctx_t *ctx;
 
-static void test_qspi_flash_fast_read_init_transfer_mode_raw(void)
+TEST_GROUP(qspi_flash_fast_read_init);
+
+TEST_SETUP(qspi_flash_fast_read_init) {}
+
+TEST_TEAR_DOWN(qspi_flash_fast_read_init) {}
+
+TEST(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_transfer_mode_raw)
 {
     qspi_flash_fast_read_init(ctx,
         XS1_CLKBLK_1,
@@ -35,7 +41,7 @@ static void test_qspi_flash_fast_read_init_transfer_mode_raw(void)
     TEST_ASSERT_EQUAL_UINT32(0, ctx->pad_delay);
 }
 
-static void test_qspi_flash_fast_read_init_transfer_mode_nibble_swap(void)
+TEST(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_transfer_mode_nibble_swap)
 {
     qspi_flash_fast_read_init(ctx,
         XS1_CLKBLK_1,
@@ -57,7 +63,7 @@ static void test_qspi_flash_fast_read_init_transfer_mode_nibble_swap(void)
     TEST_ASSERT_EQUAL_UINT32(0, ctx->pad_delay);
 }
 
-static void test_qspi_flash_fast_read_init_transfer_mode_arbitrary(void)
+TEST(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_transfer_mode_arbitrary)
 {
     qspi_flash_fast_read_init(ctx,
         XS1_CLKBLK_1,
@@ -79,7 +85,7 @@ static void test_qspi_flash_fast_read_init_transfer_mode_arbitrary(void)
     TEST_ASSERT_EQUAL_UINT32(0, ctx->pad_delay);
 }
 
-static void test_qspi_flash_fast_read_init_divide_floor(void)
+TEST(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_divide_floor)
 {
     qspi_flash_fast_read_init(ctx,
         XS1_CLKBLK_1,
@@ -101,7 +107,7 @@ static void test_qspi_flash_fast_read_init_divide_floor(void)
     TEST_ASSERT_EQUAL_UINT32(0, ctx->pad_delay);
 }
 
-static void test_qspi_flash_fast_read_init_divide_ceiling(void)
+TEST(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_divide_ceiling)
 {
     qspi_flash_fast_read_init(ctx,
         XS1_CLKBLK_1,
@@ -123,13 +129,10 @@ static void test_qspi_flash_fast_read_init_divide_ceiling(void)
     TEST_ASSERT_EQUAL_UINT32(0, ctx->pad_delay);
 }
 
-void test_qspi_flash_fast_read_init(void)
-{
-    /* Test that internal struct vars are set appropriately and that 
-     * any required value logic is applied */
-    RUN_TEST(test_qspi_flash_fast_read_init_transfer_mode_raw);
-    RUN_TEST(test_qspi_flash_fast_read_init_transfer_mode_nibble_swap);
-    RUN_TEST(test_qspi_flash_fast_read_init_transfer_mode_arbitrary);
-    RUN_TEST(test_qspi_flash_fast_read_init_divide_floor);
-    RUN_TEST(test_qspi_flash_fast_read_init_divide_ceiling);
+TEST_GROUP_RUNNER(qspi_flash_fast_read_init) {
+    RUN_TEST_CASE(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_transfer_mode_raw);
+    RUN_TEST_CASE(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_transfer_mode_nibble_swap);
+    RUN_TEST_CASE(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_transfer_mode_arbitrary);
+    RUN_TEST_CASE(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_divide_floor);
+    RUN_TEST_CASE(qspi_flash_fast_read_init, test_qspi_flash_fast_read_init_divide_ceiling);
 }
