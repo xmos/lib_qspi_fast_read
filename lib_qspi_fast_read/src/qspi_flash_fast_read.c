@@ -57,9 +57,9 @@ void qspi_flash_fast_read_setup_resources(
     port_set_buffered(ctx->sio_port);
     port_set_transfer_width(ctx->sio_port, 32);
 
-    QSPI_FF_SETC(ctx->sclk_port, QSPI_FF_PORT_PAD_CTL);
-    QSPI_FF_SETC(ctx->sio_port, QSPI_FF_PORT_PAD_CTL);
-    QSPI_FF_SETC(ctx->cs_port, QSPI_FF_PORT_PAD_CTL);
+    port_write_control_word(ctx->sclk_port, QSPI_FF_PORT_PAD_CTL);
+    port_write_control_word(ctx->sio_port, QSPI_FF_PORT_PAD_CTL);
+    port_write_control_word(ctx->cs_port, QSPI_FF_PORT_PAD_CTL);
 }
 
 void qspi_flash_fast_read_init(
@@ -76,11 +76,21 @@ void qspi_flash_fast_read_init(
     ctx->cs_port = cs_port;
     ctx->sclk_port = sclk_port;
     ctx->sio_port = sio_port;
-    ctx->mode = mode;
-    ctx->divide = divide;
-
-    xassert((mode == qspi_fast_flash_read_transfer_raw) || (mode == qspi_fast_flash_read_transfer_nibble_swap));
-    xassert((divide >= 3) && (divide <= MAX_CLK_DIVIDE));
+    
+    if (   (mode == qspi_fast_flash_read_transfer_raw) 
+        || (mode == qspi_fast_flash_read_transfer_nibble_swap)) {
+        ctx->mode = mode;
+    } else {
+        ctx->mode = qspi_fast_flash_read_transfer_raw;
+    }
+    
+    if (divide < 3) {
+        ctx->divide = 3;
+    } else if (divide > 6) {
+        ctx->divide = 6;
+    } else {
+        ctx->divide = divide;
+    }
 }
 
 void qspi_flash_fast_read_shutdown(
@@ -100,7 +110,8 @@ void qspi_flash_fast_read_apply_calibration(
     } else {
         port_set_sample_rising_edge(ctx->sio_port);
     }
-    QSPI_FF_SETC(ctx->sio_port, QSPI_FF_SETC_PAD_DELAY(ctx->pad_delay));
+    
+    port_write_control_word(ctx->sio_port, QSPI_FF_SETC_PAD_DELAY(ctx->pad_delay));
     // printf("Best settings: read adj %lu, sdelay = %lu, pad_delay = %lu\n", ctx->read_start_pt, ctx->sdelay, ctx->pad_delay);
 }
 
@@ -111,6 +122,11 @@ int32_t qspi_flash_fast_read_calibrate(
 	uint32_t *scratch_buf,
 	size_t len_words)
 {
+    
+    if ((expect_buf == NULL) || (scratch_buf == NULL)) {
+        return -1;
+    }
+    
     int32_t retval = 0;
 
     int32_t pass_start = -1;
@@ -118,11 +134,10 @@ int32_t qspi_flash_fast_read_calibrate(
     int32_t passing_words = 0;
     uint8_t time_index = 0;
 
-    xassert(ctx->divide <= MAX_CLK_DIVIDE);
     // Bit 0 sdelay, bits 1-2 read adj, bits 3-5 pad delay
     // the index into the array becomes the nominal time.
     uint8_t results[6 * (MAX_CLK_DIVIDE)];
-    
+
     // This loops over the settings in such a way that the result is sequentially increasing in time in units of core clocks.
     for(int32_t read_adj = 0; read_adj < 3; read_adj++) // Data read port time adjust
     {
@@ -137,7 +152,7 @@ int32_t qspi_flash_fast_read_calibrate(
             for(int32_t pad_delay = (ctx->divide - 1); pad_delay >= 0; pad_delay--) // Pad delays (only loop over useful pad delays)
             {
                 // Set input pad delay in units of core clocks
-                QSPI_FF_SETC(ctx->sio_port, QSPI_FF_SETC_PAD_DELAY(pad_delay));
+                port_write_control_word(ctx->sio_port, QSPI_FF_SETC_PAD_DELAY(pad_delay));
 
                 // Read the data with the current settings
                 qspi_flash_fast_read(ctx, addr, (uint8_t*)&scratch_buf[0], len_words * sizeof(uint32_t));

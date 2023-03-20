@@ -22,5 +22,6 @@ add_subdirectory(${CMAKE_BINARY_DIR}/dependencies/unity)
 
 target_compile_options(unity PRIVATE -Wno-xcore-fptrgroup)
 
-include(${CMAKE_CURRENT_LIST_DIR}/ci/calibration/app.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/ci/api/app.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/ci/resource_reuse/app.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/dev_app/app.cmake)

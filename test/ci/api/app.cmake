@@ -1,4 +1,4 @@
-set(TEST_CALIBRATION_SRC_ROOT ${CMAKE_CURRENT_LIST_DIR})
+set(TEST_GENERAL_SRC_ROOT ${CMAKE_CURRENT_LIST_DIR})
 
 #**********************
 # Gather Sources
@@ -18,6 +18,7 @@ set(APP_COMPILER_FLAGS
 )
 
 set(APP_COMPILE_DEFINITIONS
+    CLK_DIVIDE=3
 )
 
 set(APP_LINK_OPTIONS
@@ -34,7 +35,7 @@ set(APP_LINK_LIBRARIES
 # Targets
 #**********************
 
-set(TARGET_NAME test_calibration)
+set(TARGET_NAME test_general)
 add_executable(${TARGET_NAME} EXCLUDE_FROM_ALL)
 target_sources(${TARGET_NAME} PUBLIC ${APP_SOURCES})
 target_include_directories(${TARGET_NAME} PUBLIC ${APP_INCLUDES})
@@ -46,16 +47,16 @@ target_link_options(${TARGET_NAME} PRIVATE ${APP_LINK_OPTIONS})
 #**********************
 # Helper Targets
 #**********************
-add_custom_target(run_test_calibration
-    COMMAND xrun --io test_calibration.xe
-    DEPENDS test_calibration
+add_custom_target(run_test_general
+    COMMAND xrun --io test_general.xe
+    DEPENDS test_general
     COMMENT
     "Run application"
     VERBATIM
 )
 
-add_custom_target(flash_calibration_test_calibration
-    COMMAND xflash --write-all ${LIB_QSPI_FAST_READ_ROOT_PATH}/lib_qspi_fast_read/calibration_pattern.bin --target-file=${TEST_CALIBRATION_SRC_ROOT}/src/XK_VOICE_L71.xn
+add_custom_target(flash_calibration_test_general
+    COMMAND xflash --write-all ${LIB_QSPI_FAST_READ_ROOT_PATH}/lib_qspi_fast_read/calibration_pattern.bin --target-file=${TEST_GENERAL_SRC_ROOT}/src/XK_VOICE_L71.xn
     COMMENT
     "Flash calibration binary"
 )

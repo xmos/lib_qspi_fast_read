@@ -34,8 +34,6 @@ extern "C" {
                               (PORT_PAD_CTL_REN     << 17) | \
                               (PORT_PAD_CTL_MODE    << 0))
 
-#define QSPI_FF_SETC(res, r) asm volatile( "setc res[%0], %1" :: "r" (res), "r" (r))
-
 /* Pad delay uses mode bits 0x7007 with the value stored in bits 11..3 
  * Can only take on the values 0-4 */
 #define QSPI_FF_SETC_PAD_DELAY(n) (0x7007 | ((n) << 3))

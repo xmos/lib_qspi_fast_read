@@ -96,6 +96,7 @@ struct qspi_flash_fast_read_struct {
  * \param sclk_port   The SCLK port. Must be a 1-bit port.
  * \param sio_port    The SIO port. Must be a 4-bit port.
  * \param mode        The transfer mode to use for port reads.
+ *                    Invalid values will default to qspi_fast_flash_read_transfer_raw
  * \param divide      The divisor to use for QSPI SCLK. Must be between 3 and 6 inclusive.
  *                    SCLK frequency will be set to CORE_CLOCK / (2 * divide)
  *                        CORE CLOCK   600MHz    800MHz
@@ -104,6 +105,8 @@ struct qspi_flash_fast_read_struct {
  *                        4            75MHz     100MHz
  *                        5            60MHz     80MHz
  *                        6            50MHz     66MHz
+ *                    Values less than 3 will be implicity set to 3.
+ *                    Values greater than 6 will be implicity set to 6
  */
 void qspi_flash_fast_read_init(
     qspi_fast_flash_read_ctx_t *ctx,
