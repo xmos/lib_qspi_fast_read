@@ -2,6 +2,8 @@
 // This Software is subject to the terms of the XMOS Public License: Version 1
 
 /* System headers */
+#include <stdio.h>
+#include <stdlib.h>
 #include <platform.h>
 #include <xs1.h>
 #include <xcore/clock.h>
@@ -18,6 +20,22 @@ DECLARE_JOB(dummy, (void));
 
 qspi_fast_flash_read_ctx_t qspi_fast_flash_read_ctx;
 qspi_fast_flash_read_ctx_t *ctx = &qspi_fast_flash_read_ctx;
+
+static void check(uint32_t addr, size_t size)
+{
+    unsigned read_data[10240];
+    uint32_t start = get_reference_time();
+    qspi_flash_fast_read(ctx, addr, (uint8_t*)read_data, size);
+    uint32_t end = get_reference_time();
+    printf("duration: %lu bytes: %d start: %lu end: %lu\n", end-start, size, start, end);
+
+    char *ptr = (char*)&read_data;
+    for(int i=0; i<size; i++) {
+        printf("%02x ", (char)*(ptr+i));
+    }
+    printf("\n");
+}
+
 
 void test(void)
 {
@@ -42,72 +60,25 @@ void test(void)
 
     qspi_flash_fast_read_mode_set(ctx, qspi_fast_flash_read_transfer_nibble_swap);
 
-    {
-        unsigned read_data[10240];
-        uint32_t start = get_reference_time();
-        qspi_flash_fast_read(ctx, 0x100000, read_data, 10240);
-        uint32_t end = get_reference_time();
-        printf("duration: %d bytes: %d start: %d end: %d\n", end-start, 10240*4, start, end);
-        
-        // char *ptr = &read_data;
-        // for(int i=0; i<1024; i++) {
-        //     printf("%02x ", (char)*(ptr+i));
-        // }
-        // printf("\n");
-    }
+    printf("Test 1\n");
+    check(0x100000, 10240);
 
     qspi_flash_fast_read_shutdown(ctx);
     qspi_flash_fast_read_setup_resources(ctx);
     qspi_flash_fast_read_apply_calibration(ctx);
 
-    {
-        printf("Test 2\n");
-        unsigned read_data[10240];
-        uint32_t start = get_reference_time();
-        qspi_flash_fast_read(ctx, 0x100000, read_data, 10);
-        uint32_t end = get_reference_time();
-        printf("duration: %d bytes: %d start: %d end: %d\n", end-start, 10, start, end);
-
-        char *ptr = &read_data;
-        for(int i=0; i<10; i++) {
-            printf("%02x ", (char)*(ptr+i));
-        }
-        printf("\n");
-    }
+    printf("Test 2\n");
+    check(0x100000, 10);
 
     qspi_flash_fast_read_shutdown(ctx);
     qspi_flash_fast_read_setup_resources(ctx);
     qspi_flash_fast_read_apply_calibration(ctx);
 
-    {
-        printf("Test 3\n");
-        unsigned read_data[1];
-        uint32_t start = get_reference_time();
-        qspi_flash_fast_read(ctx, 0x100000, read_data, 1);
-        uint32_t end = get_reference_time();
-        printf("duration: %d bytes: %d start: %d end: %d\n", end-start, 1, start, end);
+    printf("Test 3\n");
+    check(0x100000, 1);
 
-        char *ptr = &read_data;
-        for(int i=0; i<1; i++) {
-            printf("%02x ", (char)*(ptr+i));
-        }
-        printf("\n");
-    }
-
-    {
-        printf("Test 4\n");
-        unsigned read_data[8];
-        uint32_t start = get_reference_time();
-        qspi_flash_fast_read(ctx, 0x100001, read_data, 8);
-        uint32_t end = get_reference_time();
-        printf("duration: %d bytes: %d start: %d end: %d\n", end-start, 8, start, end);
-
-        char *ptr = &read_data;
-        for(int i=0; i<8; i++) {
-            printf("%02x ", (char)*(ptr+i));
-        }
-        printf("\n");
-    }
+    printf("Test 4\n");
+    check(0x100001, 8);
 
     _Exit(0);
 }
@@ -115,7 +86,8 @@ void test(void)
 // Dummy thread to make sure we're running 8 threads.
 void dummy(void)
 {
-    int i,j;
+    volatile int i = 0;
+    volatile int j = 0;
 
     while(1)
     {
@@ -125,7 +97,6 @@ void dummy(void)
       }
     }
 }
-
 
 int main(void)
 {

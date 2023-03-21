@@ -65,8 +65,8 @@ void thruput(void)
 /* Dummy thread to fully utilize pipeline stages */
 void dummy(void)
 {
-    int i = 0;
-    int j = 0;
+    volatile int i = 0;
+    volatile int j = 0;
 
     while(1) {
       i++;

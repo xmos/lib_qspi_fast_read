@@ -1,6 +1,6 @@
 # Fast Flash Thruput Eval
 
-This is a fast flash example application to evaluate flash performance. By default this application configures for 133 MHz SCLK.
+This is a fast flash example application to evaluate flash performance. By default this application configures for 100 MHz SCLK, thus achieving a maximum theoretical thruput of 50MB/s.
 
 ## Supported Hardware
 

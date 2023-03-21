@@ -21,7 +21,7 @@ DECLARE_JOB(dummy, (void));
 qspi_fast_flash_read_ctx_t qspi_fast_flash_read_ctx;
 qspi_fast_flash_read_ctx_t *ctx = &qspi_fast_flash_read_ctx;
 
-asm volatile("  \
+asm ("  \
 .weak  _fptrgroup.unity_test_func.nstackwords.group;    \
 .max_reduce _fptrgroup.unity_test_func.nstackwords, _fptrgroup.unity_test_func.nstackwords.group, 0;    \
 .set   UnityTestRunner.nstackwords, _fptrgroup.unity_test_func.nstackwords; \
@@ -62,7 +62,8 @@ int main(int argc, const char* argv[])
 // Dummy thread to make sure we're running 8 threads.
 void dummy(void)
 {
-    int i,j;
+    volatile int i = 0;
+    volatile int j = 0;
 
     while(1)
     {
