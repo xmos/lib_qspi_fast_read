@@ -58,12 +58,6 @@ add_custom_target(run_test_resource_reuse
     VERBATIM
 )
 
-add_custom_target(flash_calibration_test_resource_reuse
-    COMMAND xflash --write-all ${LIB_QSPI_FAST_READ_ROOT_PATH}/lib_qspi_fast_read/calibration_pattern.bin --target-file=${TEST_RESOURCE_REUSE_SRC_ROOT}/src/XK_VOICE_L71.xn
-    COMMENT
-    "Flash calibration binary"
-)
-
 add_custom_target(run_test_resource_reuse_help
     COMMAND xrun --io --args test_resource_reuse.xe -h
     DEPENDS test_resource_reuse

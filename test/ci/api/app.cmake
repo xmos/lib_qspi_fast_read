@@ -57,12 +57,6 @@ add_custom_target(run_test_general
     VERBATIM
 )
 
-add_custom_target(flash_calibration_test_general
-    COMMAND xflash --write-all ${TEST_GENERAL_SRC_ROOT}/src/combined_pattern.bin --target-file=${TEST_GENERAL_SRC_ROOT}/src/XK_VOICE_L71.xn
-    COMMENT
-    "Flash calibration binary"
-)
-
 add_custom_target(run_test_general_help
     COMMAND xrun --io --args test_general.xe -h
     DEPENDS test_general

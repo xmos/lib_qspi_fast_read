@@ -7,7 +7,14 @@ Run the following commands to build the test firmware:
     $ cmake -B build -DLIB_QSPI_FAST_READ_TESTS=ON
     $ cd build
     $ make test_general
-    $ make flash_calibration_test_general
+
+Prepare the flash by running the following commands:
+
+    $ flash_erase_ci_tests
+    $ flash_data_ci_tests
+
+To run the test run:
+
     $ make run_test_general
 
 ## For more unit test options

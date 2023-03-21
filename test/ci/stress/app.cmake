@@ -55,18 +55,6 @@ foreach(SYS_FREQ ${SYS_FREQS})
         VERBATIM
     )
 
-    add_custom_target(flash_erase_test_stress_${SYS_FREQ}
-        COMMAND xflash --erase-all --target-file=${TEST_STRESS_SRC_ROOT}/src/XK_VOICE_L71_${SYS_FREQ}.xn
-        COMMENT
-        "Flash erase"
-    )
-
-    add_custom_target(flash_calibration_test_stress_${SYS_FREQ}
-        COMMAND xflash --write-all ${TEST_STRESS_SRC_ROOT}/src/calibration_and_test_data.bin --target-file=${TEST_STRESS_SRC_ROOT}/src/XK_VOICE_L71_${SYS_FREQ}.xn
-        COMMENT
-        "Flash calibration and test data binary"
-    )
-
     add_custom_target(run_test_stress_${SYS_FREQ}_help
         COMMAND xrun --io --args test_stress_${SYS_FREQ}.xe -h
         DEPENDS test_stress

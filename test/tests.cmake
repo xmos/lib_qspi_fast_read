@@ -24,7 +24,5 @@ target_compile_options(unity PRIVATE -Wno-xcore-fptrgroup)
 target_compile_definitions(unity PUBLIC UNITY_INCLUDE_CONFIG_H=1)
 target_include_directories(unity PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/ci/unity_conf>)
 
-include(${CMAKE_CURRENT_LIST_DIR}/ci/api/app.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/ci/resource_reuse/app.cmake)
-include(${CMAKE_CURRENT_LIST_DIR}/ci/stress/app.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/ci/ci_tests.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/dev_app/app.cmake)

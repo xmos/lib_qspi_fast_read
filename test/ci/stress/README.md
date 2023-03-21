@@ -9,16 +9,17 @@ Run the following commands to build the test firmware:
     $ make test_stress_600
     $ make test_stress_800
 
+Prepare the flash by running the following commands:
+
+    $ flash_erase_ci_tests
+    $ flash_data_ci_tests
+
 There are 2 tests to run:
 
-    $ flash_erase_test_stress_600
-    $ make flash_calibration_test_stress_test_600
     $ make test_stress_600
 
 And:
 
-    $ flash_erase_test_stress_800
-    $ make flash_calibration_test_stress_test_800
     $ make test_stress_800
 
 ## For more unit test options
