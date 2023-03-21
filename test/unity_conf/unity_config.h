@@ -191,7 +191,7 @@
 /* Define this to enable the unity formatted print macro:
  * "TEST_PRINTF"
  */
-/* #define UNITY_INCLUDE_PRINT_FORMATTED */
+#define UNITY_INCLUDE_PRINT_FORMATTED
 
 
 /* *************************** TOOLSET CUSTOMIZATION ***************************

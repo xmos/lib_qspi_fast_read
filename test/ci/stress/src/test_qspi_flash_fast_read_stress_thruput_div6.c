@@ -62,6 +62,7 @@ TEST(qspi_flash_fast_read_stress_thruput_div6, test_qspi_flash_fast_read_data)
 
     /* Within 5% of Theoretical max MB/s */
     TEST_ASSERT_FLOAT_WITHIN(SPEED_MAX * 0.05, SPEED_MAX, thruput);
+    TEST_PRINTF("Thruput was %f", thruput);
 }
 
 __attribute__((fptrgroup("unity_test_func")))
@@ -77,8 +78,8 @@ TEST(qspi_flash_fast_read_stress_thruput_div6, test_qspi_flash_fast_read_data_ni
 
     /* Nibbleswapping is slower, depending on len */
     TEST_ASSERT_FLOAT_WITHIN(SPEED_MAX * 0.25, SPEED_MAX / 2 ,thruput);
+    TEST_PRINTF("Thruput was %f", thruput);
 }
-
 
 TEST_GROUP_RUNNER(qspi_flash_fast_read_stress_thruput_div6) {
     RUN_TEST_CASE(qspi_flash_fast_read_stress_thruput_div6, test_qspi_flash_fast_read_data);
