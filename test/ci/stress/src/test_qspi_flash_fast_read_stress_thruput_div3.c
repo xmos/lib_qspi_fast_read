@@ -76,8 +76,9 @@ TEST(qspi_flash_fast_read_stress_thruput_div3, test_qspi_flash_fast_read_data_ni
     uint32_t end = get_reference_time();
     float thruput = 250000 * 100. / (end-start);
 
-    /* Nibbleswapping is slower, depending on len */
-    TEST_ASSERT_FLOAT_WITHIN(SPEED_MAX * 0.10, SPEED_MAX / 2 ,thruput);
+    /* Nibbleswapping is slower, heavily dependant on len since swapping must occur
+     * outside of the critical IO loop */
+    TEST_ASSERT_FLOAT_WITHIN(SPEED_MAX * 0.15, SPEED_MAX / 2 ,thruput);
     TEST_PRINTF("Thruput was %f\n", thruput);
 }
 
