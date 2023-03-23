@@ -80,6 +80,13 @@ struct qspi_flash_fast_read_struct {
 };
 
 /**
+ * \addtogroup qspi_flash_fast_read_init qspi_flash_fast_read_init
+ *
+ * The public API for instantiating the qspi_flash_fast_read device.
+ * @{
+ */
+
+/**
  * Implements a qspi_flash_fast_read device.
  * 
  * Only supported for use with flash parts with
@@ -116,6 +123,8 @@ void qspi_flash_fast_read_init(
 	port_t sio_port,
     qspi_fast_flash_read_transfer_mode_t mode,
     uint8_t divide);
+
+/**@}*/ // END: addtogroup qspi_flash_fast_read_init
 
 /**
  * Setup and initialize XCORE resources for a qspi_flash_fast_read device.
