@@ -25,7 +25,7 @@ XCC_FLAGS = -fxscope -g -mcmodel=large -report -Os
 
 # The USED_MODULES variable lists other module used by the application.
 
-USED_MODULES = lib_qspi_flash_fast_read
+USED_MODULES = lib_qspi_fast_read
 
 #=============================================================================
 # The following part of the Makefile includes the common build infrastructure

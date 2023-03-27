@@ -11,12 +11,14 @@
 #include <string.h>
 #include <assert.h>
 
+#include "app.h"
+
 unsafe{
 
 int main(void) {
     par {
       on tile[0]: {
-        func();
+        thruput();
       }
     }
 

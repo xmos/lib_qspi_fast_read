@@ -26,3 +26,7 @@ target_include_directories(unity PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_D
 
 include(${CMAKE_CURRENT_LIST_DIR}/ci/ci_tests.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/dev_app/app.cmake)
+
+## While this should be inside the ci folder, it has to be here instead
+## because of the directory structure required for xmake to find modules
+include(${CMAKE_CURRENT_LIST_DIR}/legacy_build_test/app.cmake)
