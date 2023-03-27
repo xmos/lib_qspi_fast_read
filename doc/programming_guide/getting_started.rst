@@ -16,9 +16,13 @@ To setup the hardware to use this library the flash part must be configured to a
 
 In the thruput example application a CMake custom target ``flash_config_drive_str_50_example_ff_thruput_eval`` has been added to wrap the appropriate XFLASH calls. Refer to the `XTC Tools Documentation <https://www.xmos.ai/documentation/XM-014363-PC-LATEST/html/tools-guide/tools-ref/cmd-line-tools/xflash-manual/xflash-manual.html#spi-command-option>`_ for more information on sending flash commands to the QSPI flash part via XFLASH and a connected XCORE device.
 
+.. note::
+
+  Not all flash parts require this step.  For instance, the XCORE_AI_EXPLORER board default drive strength does not need to be changed.
+
 After configuring the flash part, the next step is to flash the appropriate calibration pattern. The calibration pattern is supplied as a binary file, and the user can place this wherever they wish in flash, provided that the address is known when ``qspi_flash_fast_read_calibrate()`` is called.
 
-In the thruput example application a CMake custom target ``flash_calibration_example_ff_thruput_eval`` has been added to wrap the appropriate XFLASH call to store the pattern at address 0x00000000. Refer to the `XTC Tools Documentation <https://www.xmos.ai/documentation/XM-014363-PC-LATEST/html/tools-guide/tools-ref/cmd-line-tools/xflash-manual/xflash-manual.html#overall-options>`_ for more information on storing in the data partition.
+In the thruput example application a CMake custom target ``flash_calibration_example_ff_thruput_eval_XK_VOICE_L71`` has been added to wrap the appropriate XFLASH call to store the pattern at address 0x00000000. Refer to the `XTC Tools Documentation <https://www.xmos.ai/documentation/XM-014363-PC-LATEST/html/tools-guide/tools-ref/cmd-line-tools/xflash-manual/xflash-manual.html#overall-options>`_ for more information on storing in the data partition.
 
 General Use
 -----------

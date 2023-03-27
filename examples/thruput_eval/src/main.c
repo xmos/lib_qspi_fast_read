@@ -17,7 +17,13 @@
 DECLARE_JOB(thruput, (void));
 DECLARE_JOB(dummy, (void));
 
+#ifdef XCORE_AI_EXPLORER
+#define CLK_DIVIDE          4
+#elif XK_VOICE_L71
 #define CLK_DIVIDE          3
+#else
+#error Board not supported
+#endif
 #define THRUPUT_SIZE_BYTES  250000 /* 1/4 MB */
 #define THRUPUT_ADDR        0x00000000
 #define LOOPS_BEFORE_EXIT   10
