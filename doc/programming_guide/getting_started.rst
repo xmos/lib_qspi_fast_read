@@ -12,17 +12,20 @@ This document will walk through a use case with the |HARDWARE_URL| board with Wi
 Hardware Setup
 --------------
 
-TODO
-// setting up flash part
+To setup the hardware to use this library the flash part must be configured to a drive strength that best suits the applications expected SCLK speed. For the |HARDWARE_URL| 1V0A board, the Winbond W25Q64JW flash part the drive strength register must be configured to 50%. Per the datasheet, this can be set by writing the value 0x40 to the status register 3, 0x11.
 
-// flashing pattern
+In the thruput example application a CMake custom target ``flash_config_drive_str_50_example_ff_thruput_eval`` has been added to wrap the appropriate XFLASH calls. Refer to the `XTC Tools Documentation <https://www.xmos.ai/documentation/XM-014363-PC-LATEST/html/tools-guide/tools-ref/cmd-line-tools/xflash-manual/xflash-manual.html#spi-command-option>`_ for more information on sending flash commands to the QSPI flash part via XFLASH and a connected XCORE device.
+
+After configuring the flash part, the next step is to flash the appropriate calibration pattern. The calibration pattern is supplied as a binary file, and the user can place this wherever they wish in flash, provided that the address is known when ``qspi_flash_fast_read_calibrate()`` is called.
+
+In the thruput example application a CMake custom target ``flash_calibration_example_ff_thruput_eval`` has been added to wrap the appropriate XFLASH call to store the pattern at address 0x00000000. Refer to the `XTC Tools Documentation <https://www.xmos.ai/documentation/XM-014363-PC-LATEST/html/tools-guide/tools-ref/cmd-line-tools/xflash-manual/xflash-manual.html#overall-options>`_ for more information on storing in the data partition.
 
 General Use
 -----------
 
-The general use of the library consists of initializing the peripheral driver with the XCORE resources to use. Additionally, the user has the ability to setup the driver to populate the data buffer with read data nibble swapped or not. This is an option since depending on how data is stored in flash, the user may need to nibble swap it to be read as expected.
+The runtime setup of the library consists of initializing the peripheral driver with the XCORE resources to use. Additionally, the user has the ability to setup the driver to populate the data buffer with read data nibble swapped or not. This is an option since depending on how data is stored in flash, the user may need to nibble swap it to be read as expected.
 
-The user then must set up the resources and calibrate. See :ref:`lib_qspi_fast_read_calibration` for more information on the calibration process. After successful calibration, the user may perform reads indefinitely. There is no internal mutual exclusion mechanism and it is up to the user to handle concurrent peripheral use.
+The user then must set up the resources and calibrate. See :ref:`lib_qspi_fast_read_calibration` for more information on the calibration process. After successful calibration, the user may perform reads indefinitely, or until ``qspi_flash_fast_read_shutdown()`` is called. There is no internal mutual exclusion mechanism and it is up to the user to handle concurrent peripheral use.
 
 .. code-block:: c
 

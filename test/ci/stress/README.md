@@ -1,5 +1,7 @@
 # lib_qspi_fast_read Stress Tests
 
+This test performs large flash reads. It has expected data thruput rates based on system frequency and clock divider. It outputs the thruput for reference and readability.
+
 ## Building & running tests
 
 Run the following commands to build the test firmware:

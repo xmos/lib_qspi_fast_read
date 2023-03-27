@@ -53,6 +53,6 @@ This library has been evaluated to function at a minimum of 75 MIPs, the worst c
 Memory
 ======
 
-The ``qspi_flash_fast_read`` library requires approximately ____ kB, split between ____ kB data and ____ kB prog.
+The ``qspi_flash_fast_read`` library requires approximately 1.8 kB, split between <200 bytes data and <1600 bytes prog.
 
-Each qspi_flash_fast_read peripheral context requires ____ kB of data.
+Each qspi_flash_fast_read peripheral context requires 36 bytes of data.
