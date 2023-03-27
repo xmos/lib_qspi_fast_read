@@ -1,4 +1,5 @@
 include(${CMAKE_CURRENT_LIST_DIR}/api/app.cmake)
+include(${CMAKE_CURRENT_LIST_DIR}/legacy_build_test/app.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/resource_reuse/app.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/stress/app.cmake)
 

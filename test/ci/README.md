@@ -44,6 +44,7 @@ On Linux and Mac run:
     make test_resource_reuse
     make test_stress_600
     make test_stress_800
+    make legacy_lib_qspi_fast_read_build_test
 
 On Windows run:
 
@@ -51,6 +52,7 @@ On Windows run:
     nmake test_resource_reuse
     nmake test_stress_600
     nmake test_stress_800
+    nmake legacy_lib_qspi_fast_read_build_test
 
 ## Running the Firmware
 
