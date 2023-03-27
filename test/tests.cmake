@@ -15,14 +15,23 @@ else()
     FetchContent_Populate(unity)
 endif()
 
-set(UNITY_EXTENSION_FIXTURE ON)
-set(UNITY_EXTENSION_MEMORY ON)
+add_library(unity STATIC)
 
-add_subdirectory(${CMAKE_BINARY_DIR}/dependencies/unity)
-
+target_sources(unity
+    PUBLIC
+        ${CMAKE_BINARY_DIR}/dependencies/unity/src/unity.c
+        ${CMAKE_BINARY_DIR}/dependencies/unity/extras/fixture/src/unity_fixture.c
+        ${CMAKE_BINARY_DIR}/dependencies/unity/extras/memory/src/unity_memory.c
+)
+target_include_directories(unity
+    PUBLIC
+        ${CMAKE_BINARY_DIR}/dependencies/unity/src
+        ${CMAKE_BINARY_DIR}/dependencies/unity/extras/fixture/src
+        ${CMAKE_BINARY_DIR}/dependencies/unity/extras/memory/src
+        ${CMAKE_CURRENT_LIST_DIR}/ci/unity_conf
+)
 target_compile_options(unity PRIVATE -Wno-xcore-fptrgroup)
 target_compile_definitions(unity PUBLIC UNITY_INCLUDE_CONFIG_H=1)
-target_include_directories(unity PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/ci/unity_conf>)
 
 include(${CMAKE_CURRENT_LIST_DIR}/ci/ci_tests.cmake)
 include(${CMAKE_CURRENT_LIST_DIR}/dev_app/app.cmake)
