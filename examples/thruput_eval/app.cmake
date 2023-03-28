@@ -28,7 +28,7 @@ set(APP_LINK_OPTIONS
 )
 
 set(APP_LINK_LIBRARIES
-    lib_qspi_flash_fast_read
+    lib_qspi_fast_read
 )
 
 set(SUPPORTED_BOARDS
