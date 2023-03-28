@@ -52,7 +52,6 @@ pipeline {
                         // Install dependencies
                         withVenv() {
                             sh "pip install git+https://github0.xmos.com/xmos-int/xtagctl.git"
-                            sh "pip install -r test/requirements.txt"
                         }
                     }
                 }
