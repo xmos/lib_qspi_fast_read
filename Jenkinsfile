@@ -48,9 +48,7 @@ pipeline {
                     steps {
                         // Cleanup any xtagctl cruft from previous failed runs
                         withTools(params.TOOLS_VERSION) {
-                            withVenv {
-                                sh "xtagctl reset_all $VRD_TEST_RIG_TARGET"
-                            }
+                            sh "xtagctl reset_all $VRD_TEST_RIG_TARGET"
                         }
                         sh "rm -f ~/.xtag/status.lock ~/.xtag/acquired"
                     }
