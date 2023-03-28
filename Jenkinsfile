@@ -44,11 +44,25 @@ pipeline {
                         sh 'git submodule update --init --recursive --depth 1 --jobs \$(nproc)'
                     }
                 }
+                stage('Create virtual environment') {
+                    steps {
+                        // Create venv
+                        sh "pyenv install -s $PYTHON_VERSION"
+                        sh "~/.pyenv/versions/$PYTHON_VERSION/bin/python -m venv $VENV_DIRNAME"
+                        // Install dependencies
+                        withVenv() {
+                            sh "pip install git+https://github0.xmos.com/xmos-int/xtagctl.git"
+                            sh "pip install -r test/requirements.txt"
+                        }
+                    }
+                }
                 stage('Cleanup xtagctl') {
                     steps {
                         // Cleanup any xtagctl cruft from previous failed runs
                         withTools(params.TOOLS_VERSION) {
-                            sh "xtagctl reset_all $VRD_TEST_RIG_TARGET"
+                            withVenv {
+                                sh "xtagctl reset_all $VRD_TEST_RIG_TARGET"
+                            }
                         }
                         sh "rm -f ~/.xtag/status.lock ~/.xtag/acquired"
                     }
