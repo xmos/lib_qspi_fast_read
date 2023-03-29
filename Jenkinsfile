@@ -105,7 +105,7 @@ pipeline {
                             withVenv {
                                 script {
                                     withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
-                                        sh "/tools/ci/restore_factory_settings.sh"
+                                        sh "/tools/ci/restore_factory_settings.sh " + adapterIDs[0]
                                     }
                                 }
                             }
