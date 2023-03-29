@@ -11,11 +11,11 @@ on:
   push:
     branches:
       - 'develop'
-      - 'master'
+      - 'main'
   pull_request:
     branches:
       - 'develop'
-      - 'master'
+      - 'main'
 
   # Allow manually triggering of the workflow.
   workflow_dispatch: {}
@@ -32,5 +32,5 @@ jobs:
 
       - name: Build
         run: |
-          docker run --rm -w /lib_qspi_fast_read -v ${{ github.workspace }}:/lib_qspi_fast_read ghcr.io/xmos/xcore_builder:latest bash -l tools/ci/build_examples.sh
+          docker run --rm -w /lib_qspi_fast_read -v ${{ github.workspace }}:/lib_qspi_fast_read ghcr.io/xmos/xcore_builder:v2.0.0 bash -l tools/ci/build_examples.sh
 
