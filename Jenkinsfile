@@ -94,7 +94,7 @@ pipeline {
                             withVenv {
                                 script {
                                     withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
-                                        sh "tools/ci/run_tests.sh"
+                                        sh "tools/ci/run_tests.sh " + adapterIDs[0]
                                     }
                                 }
                             }
