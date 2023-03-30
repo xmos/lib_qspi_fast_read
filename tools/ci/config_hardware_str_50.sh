@@ -33,13 +33,14 @@ fi
 # discern repository root
 LIB_QSPI_FAST_READ_ROOT=`git rev-parse --show-toplevel`
 
-START_DIR=$PWD
-cd ${LIB_QSPI_FAST_READ_ROOT}
-cmake -B build -DLIB_QSPI_FAST_READ_TESTS=ON -DCMAKE_TOOLCHAIN_FILE=xmos_cmake_toolchain/xs3a.cmake
-cd build
+source ${LIB_QSPI_FAST_READ_ROOT}/tools/ci/helper_functions.sh
+
+(cd ${LIB_QSPI_FAST_READ_ROOT}; rm -rf build)
+(cd ${LIB_QSPI_FAST_READ_ROOT}; mkdir build)
+(cd ${LIB_QSPI_FAST_READ_ROOT}/build; log_errors cmake ../ -DLIB_QSPI_FAST_READ_TESTS=ON -DCMAKE_TOOLCHAIN_FILE=xmos_cmake_toolchain/xs3a.cmake)
+
 xflash ${ADAPTER_ID} --spi-command 0x06 --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
 xflash ${ADAPTER_ID} --spi-command 0x11 0 0x40 --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
 # flash for testing
 xflash ${ADAPTER_ID} --erase-all --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
 xflash ${ADAPTER_ID} --write-all ${LIB_QSPI_FAST_READ_ROOT}/test/ci/ci_test_flash_contents.bin --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
-cd ${START_DIR}

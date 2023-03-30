@@ -33,10 +33,7 @@ fi
 # discern repository root
 LIB_QSPI_FAST_READ_ROOT=`git rev-parse --show-toplevel`
 
-START_DIR=$PWD
-cd ${LIB_QSPI_FAST_READ_ROOT}/build/
-xrun ${ADAPTER_ID} --io --args test_general.xe -v
-xrun ${ADAPTER_ID} --io --args test_resource_reuse.xe -v
-xrun ${ADAPTER_ID} --io --args test_stress_600.xe -v
-xrun ${ADAPTER_ID} --io --args test_stress_800.xe -v
-cd ${START_DIR}
+xrun ${ADAPTER_ID} --io --args ${LIB_QSPI_FAST_READ_ROOT}/build/test_general.xe -v
+xrun ${ADAPTER_ID} --io --args ${LIB_QSPI_FAST_READ_ROOT}/build/test_resource_reuse.xe -v
+xrun ${ADAPTER_ID} --io --args ${LIB_QSPI_FAST_READ_ROOT}/build/test_stress_600.xe -v
+xrun ${ADAPTER_ID} --io --args ${LIB_QSPI_FAST_READ_ROOT}/build/test_stress_800.xe -v
