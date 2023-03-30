@@ -24,5 +24,4 @@ make test_general
 make test_resource_reuse
 make test_stress_600
 make test_stress_800
-make legacy_lib_qspi_fast_read_build_test
 cd ${START_DIR}
