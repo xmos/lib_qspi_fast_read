@@ -99,18 +99,18 @@ pipeline {
                 }
             }
             post {
-                cleanup {
-                    steps {
-                        withTools(params.TOOLS_VERSION) {
-                            withVenv {
-                                script {
-                                    withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
-                                        sh "tools/ci/restore_factory_settings.sh " + adapterIDs[0]
-                                    }
+                always {
+                    withTools(params.TOOLS_VERSION) {
+                        withVenv {
+                            script {
+                                withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
+                                    sh "tools/ci/restore_factory_settings.sh " + adapterIDs[0]
                                 }
                             }
                         }
                     }
+                }
+                cleanup {
                     // cleanWs removes all output and artifacts of the Jenkins pipeline
                     //   Comment out this post section to leave the workspace which can be useful for running items on the Jenkins agent. 
                     //   However, beware that this pipeline will not run if the workspace is not manually cleaned.
