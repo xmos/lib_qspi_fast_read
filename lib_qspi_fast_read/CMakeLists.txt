@@ -47,4 +47,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL XCORE_XS3A)
     target_link_libraries(lib_qspi_fast_read
         PUBLIC
     )
+
+    ## Set size of calibration pattern for app CMake use
+    set(LIB_QSPI_FAST_READ_DEFAULT_CAL_SIZE_BYTES 32 CACHE STRING "Size of default qspi fast read calibration pattern")
 endif()
