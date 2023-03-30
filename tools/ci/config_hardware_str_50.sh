@@ -37,7 +37,8 @@ cd ${LIB_QSPI_FAST_READ_ROOT}; rm -rf build
 cd ${LIB_QSPI_FAST_READ_ROOT}; mkdir build
 cd ${LIB_QSPI_FAST_READ_ROOT}/build; cmake ../ -DLIB_QSPI_FAST_READ_TESTS=ON -DCMAKE_TOOLCHAIN_FILE=xmos_cmake_toolchain/xs3a.cmake
 
-make flash_config_drive_str_50_ci_test
+xflash ${ADAPTER_ID} --spi-command 0x06 --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
+xflash ${ADAPTER_ID} --spi-command 0x11 0 0x40 --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
 # flash for testing
-make flash_erase_ci_tests
-make flash_data_ci_tests
+xflash ${ADAPTER_ID} --erase-all --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
+xflash ${ADAPTER_ID} --write-all ${LIB_QSPI_FAST_READ_ROOT}/test/ci/ci_test_flash_contents.bin --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
