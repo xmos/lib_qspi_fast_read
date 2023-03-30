@@ -33,7 +33,7 @@ fi
 # discern repository root
 LIB_QSPI_FAST_READ_ROOT=`git rev-parse --show-toplevel`
 
-xrun ${ADAPTER_ID} --io --args ${LIB_QSPI_FAST_READ_ROOT}/build/test_general.xe -v
-xrun ${ADAPTER_ID} --io --args ${LIB_QSPI_FAST_READ_ROOT}/build/test_resource_reuse.xe -v
-xrun ${ADAPTER_ID} --io --args ${LIB_QSPI_FAST_READ_ROOT}/build/test_stress_600.xe -v
-xrun ${ADAPTER_ID} --io --args ${LIB_QSPI_FAST_READ_ROOT}/build/test_stress_800.xe -v
+make run_test_general
+make run_test_resource_reuse
+make run_test_stress_600
+make run_test_stress_800

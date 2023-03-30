@@ -33,7 +33,6 @@ fi
 # discern repository root
 LIB_QSPI_FAST_READ_ROOT=`git rev-parse --show-toplevel`
 
-xflash --spi-command 0x06 --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
-xflash --spi-command 0x11 0 0x60 --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
+make flash_config_drive_str_25_ci_test
 # TODO verify output 0x60
-xflash --spi-command 0x15 1 --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn
+make flash_config_read_drive_str_ci_test

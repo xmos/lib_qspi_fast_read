@@ -72,7 +72,7 @@ pipeline {
                             withVenv {
                                 script {
                                     withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
-                                        sh "/tools/ci/config_hardware_str_50.sh " + adapterIDs[0]
+                                        sh "tools/ci/config_hardware_str_50.sh " + adapterIDs[0]
                                     }
                                 }
                             }
@@ -83,7 +83,7 @@ pipeline {
                     steps {
                         withTools(params.TOOLS_VERSION) {
                             script {
-                                sh "/tools/ci/build_tests.sh"
+                                sh "tools/ci/build_tests.sh"
                             }
                         }
                     }
@@ -92,7 +92,7 @@ pipeline {
                     steps {
                         withTools(params.TOOLS_VERSION) {
                             script {
-                                sh "/tools/ci/run_tests.sh"
+                                sh "tools/ci/run_tests.sh"
                             }
                         }
                     }
@@ -105,7 +105,7 @@ pipeline {
                             withVenv {
                                 script {
                                     withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
-                                        sh "/tools/ci/restore_factory_settings.sh " + adapterIDs[0]
+                                        sh "tools/ci/restore_factory_settings.sh " + adapterIDs[0]
                                     }
                                 }
                             }
