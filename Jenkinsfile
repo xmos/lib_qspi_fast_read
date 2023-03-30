@@ -91,9 +91,11 @@ pipeline {
                 stage('Run tests') {
                     steps {
                         withTools(params.TOOLS_VERSION) {
-                            script {
-                                withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
-                                    sh "tools/ci/run_tests.sh"
+                            withVenv {
+                                script {
+                                    withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
+                                        sh "tools/ci/run_tests.sh"
+                                    }
                                 }
                             }
                         }
