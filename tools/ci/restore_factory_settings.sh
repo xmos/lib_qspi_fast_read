@@ -33,6 +33,9 @@ fi
 # discern repository root
 LIB_QSPI_FAST_READ_ROOT=`git rev-parse --show-toplevel`
 
+START_DIR=$PWD
+cd ${LIB_QSPI_FAST_READ_ROOT}/build
 make flash_config_drive_str_25_ci_test
 # TODO verify output 0x60
 make flash_config_read_drive_str_ci_test
+cd ${START_DIR}
