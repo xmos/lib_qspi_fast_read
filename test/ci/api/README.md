@@ -10,8 +10,8 @@ Run the following commands to build the test firmware:
 
 Prepare the flash by running the following commands:
 
-    $ flash_erase_ci_tests
-    $ flash_data_ci_tests
+    $ make flash_erase_ci_tests
+    $ make flash_data_ci_tests
 
 To run the test run:
 
