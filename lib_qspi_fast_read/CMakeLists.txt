@@ -41,7 +41,7 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL XCORE_XS3A)
             ${LIB_PRIVATE_INCLUDES}
     )
     target_compile_options(lib_qspi_fast_read
-        PUBLIC
+        PRIVATE
             ${LIB_COMPILE_FLAGS}
     )
     target_link_libraries(lib_qspi_fast_read
