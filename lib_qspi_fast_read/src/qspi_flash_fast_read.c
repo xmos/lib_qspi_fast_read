@@ -96,6 +96,8 @@ void qspi_flash_fast_read_init(
 void qspi_flash_fast_read_shutdown(
     qspi_fast_flash_read_ctx_t *ctx)
 {
+    port_write_control_word(ctx->sio_port, QSPI_FF_SETC_PAD_DELAY(0));
+
     clock_disable(ctx->clock_block);
     port_disable(ctx->sclk_port);
     port_disable(ctx->cs_port);
