@@ -104,6 +104,7 @@ void qspi_flash_fast_read_shutdown(
         port_disable(ctx->sclk_port);
         port_disable(ctx->cs_port);
         port_disable(ctx->sio_port);
+        ctx->is_setup = 0;
     }
 }
 
