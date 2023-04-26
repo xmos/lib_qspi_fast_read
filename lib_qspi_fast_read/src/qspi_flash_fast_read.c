@@ -60,6 +60,7 @@ void qspi_flash_fast_read_setup_resources(
     port_write_control_word(ctx->sclk_port, QSPI_FF_PORT_PAD_CTL);
     port_write_control_word(ctx->sio_port, QSPI_FF_PORT_PAD_CTL);
     port_write_control_word(ctx->cs_port, QSPI_FF_PORT_PAD_CTL);
+    ctx->is_setup = 1;
 }
 
 void qspi_flash_fast_read_init(
@@ -96,10 +97,14 @@ void qspi_flash_fast_read_init(
 void qspi_flash_fast_read_shutdown(
     qspi_fast_flash_read_ctx_t *ctx)
 {
-    clock_disable(ctx->clock_block);
-    port_disable(ctx->sclk_port);
-    port_disable(ctx->cs_port);
-    port_disable(ctx->sio_port);
+    if (ctx->is_setup != 0) {
+        port_write_control_word(ctx->sio_port, QSPI_FF_SETC_PAD_DELAY(0));
+
+        clock_disable(ctx->clock_block);
+        port_disable(ctx->sclk_port);
+        port_disable(ctx->cs_port);
+        port_disable(ctx->sio_port);
+    }
 }
 
 void qspi_flash_fast_read_apply_calibration(

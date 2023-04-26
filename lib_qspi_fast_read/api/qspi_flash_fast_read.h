@@ -77,6 +77,7 @@ struct qspi_flash_fast_read_struct {
 	uint32_t read_start_pt;
 	uint32_t sdelay;
     uint32_t pad_delay;
+	uint8_t is_setup;
 };
 
 /**
