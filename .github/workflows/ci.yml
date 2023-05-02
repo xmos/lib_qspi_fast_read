@@ -1,0 +1,36 @@
+# YAML schema for GitHub Actions:
+# https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
+#
+# Helpful YAML parser to clarify YAML syntax:
+# https://yaml-online-parser.appspot.com/
+#
+# This file contains the workflows that are run prior to merging a pull request.
+name: CI
+
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'main'
+  pull_request:
+    branches:
+      - 'develop'
+      - 'main'
+
+  # Allow manually triggering of the workflow.
+  workflow_dispatch: {}
+
+jobs:
+  build_tests_xcore:
+    name: Build Examples
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Build
+        run: |
+          docker run --rm -u $(id -u):$(id -g) -w /lib_qspi_fast_read -v ${{ github.workspace }}:/lib_qspi_fast_read ghcr.io/xmos/xcore_builder:latest bash -l tools/ci/build_examples.sh
+

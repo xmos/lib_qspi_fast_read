@@ -23,8 +23,7 @@ extern "C" {
 #define PORT_PAD_CTL_SMT    0           // Schmitt off
 #define PORT_PAD_CTL_SR     1           // Fast slew
 #ifndef PORT_PAD_CTL_DR_STR
-#define PORT_PAD_CTL_DR_STR DR_STR_2mA
-// #define PORT_PAD_CTL_DR_STR DR_STR_8mA  // 8mA drive
+#define PORT_PAD_CTL_DR_STR DR_STR_8mA  // 8mA drive
 #endif
 #define PORT_PAD_CTL_REN    1           // Receiver enabled
 #define PORT_PAD_CTL_MODE   0x0006
@@ -34,8 +33,6 @@ extern "C" {
                               (PORT_PAD_CTL_DR_STR  << 20) | \
                               (PORT_PAD_CTL_REN     << 17) | \
                               (PORT_PAD_CTL_MODE    << 0))
-
-#define QSPI_FF_SETC(res, r) asm volatile( "setc res[%0], %1" :: "r" (res), "r" (r))
 
 /* Pad delay uses mode bits 0x7007 with the value stored in bits 11..3 
  * Can only take on the values 0-4 */

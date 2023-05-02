@@ -20,6 +20,9 @@ set(LIB_QSPI_FAST_READ_ROOT_PATH ${PROJECT_SOURCE_DIR} CACHE STRING "Root folder
 ## Add library
 add_subdirectory(lib_qspi_fast_read)
 
+## Add tools
+add_subdirectory(tools)
+
 ## Add top level project targets
 if(PROJECT_IS_TOP_LEVEL)
     include(examples/examples.cmake)

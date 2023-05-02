@@ -1,10 +1,13 @@
 # lib_qspi_fast_read Repository
 
-TODO
+`lib_qspi_fast_read` is a library for interfacing with a QSPI flash device on an XMOS device. This library achieves higher data transfer bandwidth than the default supplied flash libraries at the cost of flexiblity and write/erase functions.
 
 ## Build Status
 
-TODO
+Build Type       |    Status     |
+-----------      | --------------|
+CI (Linux)       | ![CI](https://github.com/xmos/lib_qspi_fast_read/actions/workflows/ci.yml/badge.svg?branch=develop&event=push) |
+Docs             | ![CI](https://github.com/xmos/lib_qspi_fast_read/actions/workflows/docs.yml/badge.svg?branch=develop&event=push) |
 
 ## Cloning
 

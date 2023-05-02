@@ -27,24 +27,27 @@ if(${CMAKE_SYSTEM_NAME} STREQUAL XCORE_XS3A)
     list(APPEND LIB_PRIVATE_SOURCES ${${CMAKE_SYSTEM_NAME}_SOURCES})
 
     ## Create library target
-    add_library(lib_qspi_flash_fast_read STATIC)
-    target_sources(lib_qspi_flash_fast_read
+    add_library(lib_qspi_fast_read STATIC)
+    target_sources(lib_qspi_fast_read
         PUBLIC
             ${LIB_PUBLIC_SOURCES}
         PRIVATE
             ${LIB_PRIVATE_SOURCES}
     )
-    target_include_directories(lib_qspi_flash_fast_read
+    target_include_directories(lib_qspi_fast_read
         PUBLIC
             ${LIB_PUBLIC_INCLUDES}
         PRIVATE
             ${LIB_PRIVATE_INCLUDES}
     )
-    target_compile_options(lib_qspi_flash_fast_read
-        PUBLIC
+    target_compile_options(lib_qspi_fast_read
+        PRIVATE
             ${LIB_COMPILE_FLAGS}
     )
-    target_link_libraries(lib_qspi_flash_fast_read
+    target_link_libraries(lib_qspi_fast_read
         PUBLIC
     )
+
+    ## Set size of calibration pattern for app CMake use
+    set(LIB_QSPI_FAST_READ_DEFAULT_CAL_SIZE_BYTES 32 CACHE STRING "Size of default qspi fast read calibration pattern")
 endif()

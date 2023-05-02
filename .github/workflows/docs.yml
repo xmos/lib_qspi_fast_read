@@ -1,0 +1,44 @@
+# YAML schema for GitHub Actions:
+# https://help.github.com/en/actions/automating-your-workflow-with-github-actions/workflow-syntax-for-github-actions
+#
+# Helpful YAML parser to clarify YAML syntax:
+# https://yaml-online-parser.appspot.com/
+#
+# This file contains the workflows that are run prior to merging a pull request.
+name: Docs
+
+on:
+  push:
+    branches:
+      - 'develop'
+      - 'main'
+  pull_request:
+    branches:
+      - 'develop'
+      - 'main'
+
+  # Allow manually triggering of the workflow.
+  workflow_dispatch: {}
+
+jobs:
+  build_documentation:
+    name: Build and package documentation
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      
+      - name: Build documentation
+        run: |
+          docker run --rm -t -u "$(id -u):$(id -g)" -v ${{ github.workspace }}:/build -e REPO:/build -e DOXYGEN_INCLUDE=/build/doc/Doxyfile.inc -e EXCLUDE_PATTERNS=/build/doc/exclude_patterns.inc -e DOXYGEN=1 -e DOXYGEN_INCLUDE=/build/doc/Doxyfile.inc -e PDF=1 -e SKIP_LINK=1 ghcr.io/xmos/doc_builder:v2.0.0
+
+      - name: Save documentation artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: lib_qspi_fast_read_docs
+          path: |
+            ./doc/_build/html
+            ./doc/_build/pdf
+          if-no-files-found: error # 'warn' or 'ignore' are also available, defaults to `warn` 
+          retention-days: 5
+          
