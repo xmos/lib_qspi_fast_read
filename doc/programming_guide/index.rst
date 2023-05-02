@@ -1,6 +1,6 @@
-#################
-Programming Guide
-#################
+####################################
+lib_qspi_fast_read Programming Guide
+####################################
 
 .. toctree::
    :maxdepth: 2
