@@ -35,7 +35,7 @@ pipeline {
     stages {
         stage('QSPI fast read tests') {
             agent {
-                label 'vrd-us'
+                label 'xcore.ai'
             }
             stages{
                 stage('Checkout') {
