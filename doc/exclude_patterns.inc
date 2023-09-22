@@ -3,3 +3,6 @@ test
 xmos_cmake_toolchain
 build
 build_*
+CHANGELOG.rst
+LICENSE.rst
+**README*
