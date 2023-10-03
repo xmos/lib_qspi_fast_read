@@ -14,24 +14,4 @@ TODO: Include URL for hosted documentation
 Building Documentation
 **********************
 
-=============
-Prerequisites
-=============
-
-Install `Docker <https://www.docker.com/>`_.
-
-Pull the docker container:
-
-.. code-block:: console
-
-    docker pull ghcr.io/xmos/doc_builder:v3.0.0
-
-========
-Building
-========
-
-To build the documentation, run the following command in the root of the repository:
-
-.. code-block:: console
-
-    docker run --rm -t -u "$(id -u):$(id -g)" -v $(pwd):/build -e REPO:/build -e PDF=1 -e DOXYGEN_INCLUDE=/build/doc/Doxyfile.inc -e EXCLUDE_PATTERNS=/build/doc/exclude_patterns.inc -e DOXYGEN_INPUT=ignore ghcr.io/xmos/doc_builder:v3.0.0
+Use the `xmosdoc tool <https://github.com/xmos/xmosdoc>`_ either via docker or install it into a pip environment.
