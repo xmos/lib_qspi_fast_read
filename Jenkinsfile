@@ -30,7 +30,7 @@ pipeline {
         PYTHON_VERSION = "3.8.11"
         VENV_DIRNAME = ".venv"
         BUILD_DIRNAME = "dist"
-        VRD_TEST_RIG_TARGET = "xcore_voice_test_rig"
+        VRD_TEST_RIG_TARGET = "XCORE-AI-EXPLORER"
     }
     stages {
         stage('Build and Docs') {
@@ -59,7 +59,7 @@ pipeline {
                         expression { !env.GH_LABEL_DOC_ONLY.toBoolean() }
                     }
                     agent {
-                        label 'vrd-us'
+                        label 'xcore.ai && vrd'
                     }
                     stages{
                         stage('Checkout') {
