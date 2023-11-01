@@ -4,7 +4,7 @@ lib_qspi_fast_read change log
 1.0.2
 -----
 
-    * CHANGED: Documentation built under xmos_doc
+    * CHANGED: Documentation built under xmosdoc
 
 1.0.1
 -----
