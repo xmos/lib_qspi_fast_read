@@ -1,7 +1,7 @@
 ---
 project: lib_qspi_fast_read
 title: QSPI Fast Flash Read Library
-version: 1.0.1
+version: 1.0.2
 
 documentation:
   exclude_patterns_path: doc/exclude_patterns.inc
