@@ -16,4 +16,11 @@ Find the latest version of ``lib_qspi_fast_read`` on `GitHub
 
 .. only:: html
 
-    .. include:: ../_templates/disclaimer.rst
+    Copyright & Disclaimer
+    ======================
+
+    |XMOS copyright|
+
+    |XMOS disclaimer|
+
+    |XMOS trademarks|

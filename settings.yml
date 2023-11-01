@@ -1,0 +1,15 @@
+---
+project: lib_qspi_fast_read
+title: QSPI Fast Flash Read Library
+version: 1.0.2
+
+documentation:
+  exclude_patterns_path: doc/exclude_patterns.inc
+  substitutions_path: doc/substitutions.inc
+  doxygen_projects:
+    lib_quad_spi_fast_read:
+      doxyfile_path: doc/Doxyfile.inc
+  pdfs:
+    doc/programming_guide/index:
+      pdf_title: "{{title}} - Programming Guide"
+      pdf_filename: "{{project}}_programming_guide_v{{version}}"
