@@ -90,19 +90,6 @@ pipeline {
                                 sh "rm -f ~/.xtag/status.lock ~/.xtag/acquired"
                             }
                         }
-                        stage('Set up hardware') {
-                            steps {
-                                withTools(params.TOOLS_VERSION) {
-                                    withVenv {
-                                        script {
-                                            withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
-                                                sh "tools/ci/config_hardware_str_50.sh " + adapterIDs[0]
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         stage('Build tests') {
                             steps {
                                 withTools(params.TOOLS_VERSION) {
@@ -117,8 +104,13 @@ pipeline {
                                 withTools(params.TOOLS_VERSION) {
                                     withVenv {
                                         script {
-                                            withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
-                                                sh "tools/ci/run_tests.sh " + adapterIDs[0]
+                                            withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs -> 
+                                                try {
+                                                    sh "tools/ci/config_hardware_str_50.sh " + adapterIDs[0]
+                                                    sh "tools/ci/run_tests.sh " + adapterIDs[0]
+                                                } finally {
+                                                    sh "tools/ci/restore_factory_settings.sh " + adapterIDs[0]
+                                                }
                                             }
                                         }
                                     }
@@ -127,17 +119,6 @@ pipeline {
                         }
                     }
                     post {
-                        always {
-                            withTools(params.TOOLS_VERSION) {
-                                withVenv {
-                                    script {
-                                        withXTAG(["$VRD_TEST_RIG_TARGET"]) { adapterIDs ->
-                                            sh "tools/ci/restore_factory_settings.sh " + adapterIDs[0]
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         cleanup {
                             // xcoreCleanSandbox removes all output and artifacts of the Jenkins pipeline
                             //   Comment out this post section to leave the workspace which can be useful for running items on the Jenkins agent. 
