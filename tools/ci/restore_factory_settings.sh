@@ -33,6 +33,7 @@ fi
 # discern repository root
 LIB_QSPI_FAST_READ_ROOT=`git rev-parse --show-toplevel`
 
+# 0x06 - write enable, 0x11 0x00 0x40 sets drive strength back to 25% (default) on the Winbond flash
 xflash --spi-command 0x06 --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn ${ADAPTER_ID}
 xflash --spi-command 0x11 0 0x60 --target-file=${LIB_QSPI_FAST_READ_ROOT}/test/ci/XK_VOICE_L71.xn ${ADAPTER_ID}
 # TODO verify output 0x60
